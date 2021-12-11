@@ -1,0 +1,8 @@
+venv/
+.idea/
+__pycache__/
+images_test.py
+test-testu.txt
+test.jpg
+test1.jpg
+todos.txt
