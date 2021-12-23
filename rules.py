@@ -10,18 +10,29 @@ def rule_1(expected, fp, fk):
 
 
 def rule_2(expected, fp, fk):
-    pass
-    #return f_pi * (not(f_ki))
+    rule_check = [True if expected[i] == (fp[i] * (not(fk[i]))) else False for i in range(len(expected))]
+    print(rule_check)
+    if False in rule_check:
+        return False
+    return True
 
 
 def rule_3(expected, fp, fk):
-    pass
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == fp[i] * 0:
+            rule_check.append(True)
+        elif expected[i] == fp[i] * 1:
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
     #return f_pi * J_j
 
 
-# "Y": [0, 1, 1, 0, 0],
-# "fp": [0, 1, 1, 0, 0],
-# "fk": [0, 0, 0, 1, 0],
 def rule_4(expected, fp, fk):
     value = lambda f_ki, J_j: (not(f_ki)) * J_j
     bool_check = True
@@ -48,54 +59,151 @@ def rule_4(expected, fp, fk):
     return True
 
 def rule_5(expected, fp, fk):
-    value = lambda f_pi,y_i,f_ki: (f_pi + y_i) * (not(f_ki))
+    value = lambda f_pi, y_i, f_ki: (f_pi or y_i) and (not(f_ki))
     bool_check = True
+    count_0 = expected.count(0)
+    count_1 = expected.count(1)
     for i in range(len(expected)):
-        if 0 in fp:
+        print(value(fp[i], expected[i], fk[i]))
+        if count_0:
             y_i = 0
-        if expected[i] == value(fp[i], fk[i], expected[i]):
+        if expected[i] == value(fp[i], y_i, fk[i]):
+            count_0 -= 1
             pass
         else:
-            bool_check = False
-            break
-    for i in range(len(expected)):
-        if 1 in fp:
-            y_i = 1
-        if expected[i] == value(fp[i], fk[i], expected[i]):
-            pass
-        else:
-            return False
-    return bool_check
+            if count_1:
+                y_i = 1
+            if expected[i] == value(fp[i], y_i, fk[i]):
+                print(fp[i] + y_i)
+                count_1 -= 1
+                pass
+            else:
+                bool_check = False
+    if bool_check is False:
+        return bool_check
+    return True
+
 
 
 def rule_6(expected, fp, fk):
-    pass
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == fp[i] * (not(fk[i])) * 0:
+            rule_check.append(True)
+        elif expected[i] == fp[i] * (not(fk[i])) * 1:
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
     #return f_pi * (not(f_ki)) * J_j
 
 
 def rule_7(expected, fp, fk):
-    pass
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == fp[i] * ((not (fk[i])) + 0):
+            rule_check.append(True)
+        elif expected[i] == fp[i] * ((not (fk[i])) + 1):
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
     #return f_pi * ((not(f_ki)) * J_j)
 
 
 def rule_8(expected, fp, fk):
-    pass
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == (fp[i] + 0) * ((not (fk[i])) + 0):
+            rule_check.append(True)
+        elif expected[i] == (fp[i] + 0) * ((not (fk[i])) + 1):
+            rule_check.append(True)
+        elif expected[i] == (fp[i] + 1) * ((not (fk[i])) + 0):
+            rule_check.append(True)
+        elif expected[i] == (fp[i] + 1) * ((not (fk[i])) + 1):
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
     #return (f_pi + y_i) * ((not(f_ki)) + J_j)
 
 
 def rule_9(expected, fp, fk):
-    pass
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == (fp[i] + 0) * (not (fk[i])) * 0:
+            rule_check.append(True)
+        elif expected[i] == (fp[i] + 0) * (not (fk[i])) * 1:
+            rule_check.append(True)
+        elif expected[i] == (fp[i] + 1) * (not (fk[i])) * 0:
+            rule_check.append(True)
+        elif expected[i] == (fp[i] + 1) * (not (fk[i])) * 1:
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
     #return (f_pi + y_i) * (not(f_ki)) * J_j
 
 
 def rule_10(expected, fp, fk):
     value = lambda f_pi,J_j,y_i,f_ki: (f_pi * J_j + y_i) * (not(f_ki))
-    pass
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == value(fp[i], 0, 0, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 0, 1, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 1, 0, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 1, 1, fk[i]):
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
 
 
 
 def rule_11(expected, fp, fk):
-    pass
+    value = lambda f_pi, J_j, y_i, J_k,f_ki: (f_pi * J_j + y_i) * (not (f_ki)) * J_k
+    rule_check = []
+    for i in range(len(expected)):
+        if expected[i] == value(fp[i], 0, 0, 0, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 0, 1, 0, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 1, 0, 0, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 1, 1, 0, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 0, 1, 1, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 1, 0, 1, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 1, 1, 1, fk[i]):
+            rule_check.append(True)
+        elif expected[i] == value(fp[i], 0, 0, 1, fk[i]):
+            rule_check.append(True)
+        else:
+            rule_check.append(False)
+
+    if False in rule_check:
+        return False
+    return True
     #return (f_pi * J_j + y_i) * (not(f_ki)) * J_k
 
 
