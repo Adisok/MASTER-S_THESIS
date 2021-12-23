@@ -22,7 +22,6 @@ class TestRules:
             # if isinstance(rozwiazanie[-1], tuple):
             #     rozwiazanie[-1] = rozwiazanie[-1][0] * rozwiazanie[-1][1] == test_values["Y"]
         print(rozwiazanie)
-        assert len(rozwiazanie) == 1
         assert 'rule_1' in rozwiazanie
 
     def test_for_rule_two_being_used(self):
@@ -71,6 +70,7 @@ class TestRules:
             # if isinstance(rozwiazanie[-1], tuple):
             #     rozwiazanie[-1] = rozwiazanie[-1][0] * rozwiazanie[-1][1] == test_values["Y"]
         print(rozwiazanie)
+        assert 'rule_4' in rozwiazanie
 
     def test_for_rule_five_being_used(self):
         test_values = {
@@ -91,8 +91,8 @@ class TestRules:
     def test_for_rule_six_being_used(self):
         test_values = {
             "Y": [0, 1, 1, 0, 0],
-             "fp": [0, 1, 0, 0, 0],
-             "fk": [0, 0, 0, 1, 0],
+             "fp": [0, 1, 1, 1, 1],
+             "fk": [0, 0, 0, 1, 2],
         }
         rozwiazanie = []
 
