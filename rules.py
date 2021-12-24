@@ -25,8 +25,28 @@ def rule_3(expected, fp, fk):
 
 
 def rule_4(expected, fp, fk):
-    value = lambda f_pi, f_ki, J_j: (not(f_ki)) and J_j
-    return calculate_value(expected, value, fp, fk, 1)
+    value = lambda f_ki, J_j: (not(f_ki)) * J_j
+    bool_check = True
+
+    count_0 = fk.count(0)
+    count_1 = fk.count(1)
+    for i in range(len(expected)):
+        if count_0:
+            J_j = 0
+        if expected[i] == value(fk[i], J_j):
+            count_0 -= 1
+            pass
+        else:
+            if count_1:
+                J_j = 1
+            if expected[i] == value(fk[i], J_j):
+                count_1 -= 1
+                pass
+            else:
+                bool_check = False
+    if bool_check is False:
+        return bool_check
+    return True
 
 
 def rule_5(expected, fp, fk):
@@ -56,94 +76,61 @@ def rule_9(expected, fp, fk):
 
 
 def rule_10(expected, fp, fk):
-    value = lambda f_pi,J_j,y_i,f_ki: (f_pi and J_j or y_i) and (not(f_ki))
-    rule_check = []
-    for i in range(len(expected)):
-        if expected[i] == value(fp[i], 0, 0, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 0, 1, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 1, 0, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 1, 1, fk[i]):
-            rule_check.append(True)
-        else:
-            rule_check.append(False)
-    return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, J_j, y_i: (f_pi and J_j or y_i) and (not(f_ki))
+    return calculate_value(expected, value, fp, fk, 2)
 
 
 def rule_11(expected, fp, fk):
-    value = lambda f_pi, J_j, y_i, J_k,f_ki: (f_pi and J_j or y_i) and (not (f_ki)) and J_k
-    rule_check = []
-    for i in range(len(expected)):
-        if expected[i] == value(fp[i], 0, 0, 0, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 0, 1, 0, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 1, 0, 0, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 1, 1, 0, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 0, 1, 1, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 1, 0, 1, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 1, 1, 1, fk[i]):
-            rule_check.append(True)
-        elif expected[i] == value(fp[i], 0, 0, 1, fk[i]):
-            rule_check.append(True)
-        else:
-            rule_check.append(False)
-
-    return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, J_j, y_i, J_k: (f_pi and J_j or y_i) and (not (f_ki)) and J_k
+    return calculate_value(expected, value, fp, fk, 3)
     #return (f_pi and J_j + y_i) and (not(f_ki)) and J_k
 
 
 def rule_12(expected, fp, fk):
-    pass
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, J_j, y_i, J_k: (f_pi and J_j or y_i) and ((not (f_ki)) or J_k)
+    return calculate_value(expected, value, fp, fk, 3)
     #return (f_pi * J_j + y_i) * ((not(f_ki)) + J_k)
 
 
 def rule_13(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, J_j, m: (f_pi and (not(m))) or ((f_ki or m) and J_j)
+    return calculate_value(expected, value, fp, fk, 2)
     #return (f_pi * (not(m)), (f_ki + m) * J_j)
 
 
 def rule_14(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, J_j, m, J_k: (f_pi and J_j and (not(m))) or ((f_ki or m) and J_k)
+    return calculate_value(expected, value, fp, fk, 3)
     #return (f_pi * J_j * (not(m)), (f_ki + m) * J_k)
 
 
 def rule_15(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, J_j, m, J_k: (f_pi and (not(m))) or ((f_ki and J_j or m) and J_k)
+    return calculate_value(expected, value, fp, fk, 3)
     #return (f_pi * (not(m)), (f_ki * J_j + m) * J_k)
 
 
 def rule_16(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, y_i, J_j, m: ((f_pi or y_i) and (not(m))) or ((f_ki or m) and J_j)
+    return calculate_value(expected, value, fp, fk, 3)
     #return ((f_pi + y_i) * (not(m)), (f_ki + m) * J_j)
 
 
 def rule_17(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, y_i, J_j, m, J_k: ((f_pi or y_i) and (not(m))) or ((f_ki and J_j or m) and J_k)
+    return calculate_value(expected, value, fp, fk, 4)
     #return ((f_pi + y_i) * (not(m)), (f_ki * J_j + m ) * J_k)
 
 
 def rule_18(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, y_i, J_j, m, J_k, J_l: ((f_pi and J_j or y_i) and (not(m))) or ((f_ki and J_k or m) and J_l)
+    return calculate_value(expected, value, fp, fk, 5)
     #return (f_pi * J_j * (not(m)), (f_ki * J_k + m) * J_l)
 
 
 def rule_19(expected, fp, fk):
-    return False
-    #return check_for_false(rule_check)
+    value = lambda f_pi, f_ki, y_i, J_j, m, J_k: ((f_pi and J_j or y_i) and (not(m))) or ((f_ki or m) and J_k)
+    return calculate_value(expected, value, fp, fk, 4)
     #return ((f_pi * J_j + y_i) * (not(m)), (f_ki + m) * J_k)
 
 
