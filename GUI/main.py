@@ -1,6 +1,7 @@
 import sys
 
 from GUI.file_operations import FileOperations
+from custom_buttons import Button
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
@@ -96,10 +97,13 @@ class SiMts(QWidget):
         list_widget.setSpacing(20)
 
         icon_list = QListWidget()
+        icon = Button('Button', self)
+        icon.setStyleSheet("background-image : test.jpg")
         icon2 = QPixmap("test1.jpg")
 
         icon_widget = QLabel()
         icon_widget1 = QLabel()
+
 
 
         #icon_widget.setPixmap(icon)
