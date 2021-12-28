@@ -1,16 +1,15 @@
 import sys
-import pyqtgraph as pg
 
-from pyqtgraph import PlotWidget, plot
+from GUI.file_operations import FileOperations
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 
 
 class SiMts(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.file_managing = FileOperations()
 
         # Definie size of window
         self.left = 200
@@ -36,6 +35,7 @@ class SiMts(QWidget):
     def doLayout(self):
         """  Defining Layout parameters """
         # Setting Window Title, and geometry
+        self.setAcceptDrops(True)
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
@@ -96,13 +96,13 @@ class SiMts(QWidget):
         list_widget.setSpacing(20)
 
         icon_list = QListWidget()
-        icon = QPixmap("test.jpg")
         icon2 = QPixmap("test1.jpg")
 
         icon_widget = QLabel()
         icon_widget1 = QLabel()
 
-        icon_widget.setPixmap(icon)
+
+        #icon_widget.setPixmap(icon)
         icon_widget1.setPixmap(icon2)
 
         #icon_widget.setGeometry(200, 200, 200, 200)
@@ -112,8 +112,8 @@ class SiMts(QWidget):
 
         #icon_list.addItem(QListWidgetItem(icon_widget))
         #icon_list.addItem(icon_widget1)
-        self.tab2.layout.addWidget(icon_widget,2)
-        self.tab2.layout.addWidget(list_widget,4)
+        self.tab2.layout.addWidget(icon_widget, 2)
+        self.tab2.layout.addWidget(list_widget, 4)
 
         self.tab2.setLayout(self.tab2.layout)
 
@@ -134,65 +134,25 @@ class SiMts(QWidget):
         new_act3 = QAction("Zamknij", self)           # Creating third option
 
         s_menu1.addAction(new_act1)
-        new_act1.triggered.connect(self.get_file)
+        new_act1.triggered.connect(
+            lambda x=self.textEditor1, y=self.graphWidget, z=self.plot_itself:
+            self.file_managing.get_file(textEditor=x, graphWidget=y, plot_itself=z)
+        )
         new_act1.setShortcut("Ctrl+O")
 
         s_menu1.addAction(new_act2)
-        new_act2.triggered.connect(self.save_file)
+        new_act2.triggered.connect(
+            lambda x=self.textEditor1, y=self:
+            self.file_managing.save_file(textEditor=x, widget=y)
+        )
         new_act2.setShortcut("Ctrl+S")
 
         s_menu1.addAction(new_act3)
-        new_act3.triggered.connect(self.exit_file)
+        new_act3.triggered.connect(
+            lambda x=app, y=self:
+            self.file_managing.exit_file(app=x, widget=y)
+        )
         new_act3.setShortcut("Ctrl+E")
-
-    def get_file(self):
-        """ Opening file """
-        dialog = QFileDialog()
-        dialog.setFileMode(QFileDialog.AnyFile)
-        dialog.setFilter(QDir.Files)
-
-        if dialog.exec():
-            file_name = dialog.selectedFiles()
-            if file_name[0].endswith(".txt"):
-                with open(file_name[0], "r") as f:
-                    self.data = f.read()
-                    self.textEditor1.setPlainText(self.data)
-                    f.close()
-                    self.get_data()
-            else:
-                pass
-
-    def get_data(self):
-        """ Preparing data to plot """
-        prep_datx, prep_daty = [], []
-
-        for i in self.data.split("\n")[0]:
-            prep_daty.append(int(i))
-        for j in self.data.split("\n")[1]:
-            prep_datx.append(int(j))
-
-        self.graphWidget.setXRange(0, max(prep_datx))
-        self.graphWidget.setYRange(0, 1)
-        ay = self.graphWidget.getAxis("left")
-        ay.setTicks([[(0, "0"), (1, "1")], []])
-        self.plot_itself.setData(prep_datx, prep_daty)
-
-    def save_file(self):
-        """ Saving file """
-        name = QFileDialog.getSaveFileName(self, "Zapisz Plik", filter="Dane Textowe (*.txt)")
-        with open(name[0].split("/")[-1], "w") as f:
-            text = self.textEditor.toPlainText()
-            f.write(text)
-            f.close()
-
-    def exit_file(self):
-        """ Closing application """
-        choice = QMessageBox.question(self, "Koniec", "Ciemność, widzę ciemność, ciemność widzę",
-                                      QMessageBox.Yes | QMessageBox.No)
-        if choice == QMessageBox.Yes:
-            sys.exit(app.exec_())
-        else:
-            pass
 
     def schematic(self):
         pass
