@@ -6,18 +6,20 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 
+# Define title of app
+TITLE = "PneuSim"
+
+# Define size of window
+LEFT = 200
+TOP = 200
+WIDTH = 1024
+HEIGHT = 200
+
 class SiMts(QWidget):
 
     def __init__(self):
         super().__init__()
         self.file_managing = FileOperations()
-
-        # Definie size of window
-        self.left = 200
-        self.top = 200
-        self.title = "nazwa robocza"
-        self.width = 1024
-        self.height = 200
 
         self.data = [[0], [0]]
         self.plot_itself = None
@@ -26,8 +28,8 @@ class SiMts(QWidget):
         self.textEditor1 = QTextEdit()  # Defining data TextBox
         self.textEditor2 = QTextEdit()  # Defining results TextBox
         self.menubar = QMenuBar(self)   # Defining toolbarmenu object
-        self.tab1 = QWidget()           # Defining tab for data,results and plot
-        self.tab2 = QWidget()           # Defining tab for schematic
+        self.data_tab = QWidget()           # Defining tab for data,results and plot
+        self.schemat_tab = QWidget()           # Defining tab for schematic
 
         self.stripMenu()  # Creating Strip Menu
 
@@ -37,8 +39,8 @@ class SiMts(QWidget):
         """  Defining Layout parameters """
         # Setting Window Title, and geometry
         self.setAcceptDrops(True)
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setWindowTitle(TITLE)
+        self.setGeometry(LEFT, TOP, WIDTH, HEIGHT)
 
         # Creating widgets
         # Data TextBox
@@ -74,21 +76,21 @@ class SiMts(QWidget):
 
         # Creating Tabs Layous
         tabs = QTabWidget()
-        tabs.addTab(self.tab1, "Dane")
-        tabs.addTab(self.tab2, "Schemat")
+        tabs.addTab(self.data_tab, "Dane")
+        tabs.addTab(self.schemat_tab, "Schemat")
 
-        self.tab1.layout = QHBoxLayout(self)
+        self.data_tab.layout = QHBoxLayout(self)
 
         tab1_insidelayout = QVBoxLayout(self)
         tab1_insidelayout.addLayout(hbox1)
         tab1_insidelayout.addLayout(hbox2)
         tab1_insidelayout.addStretch(1)
         tab1_insidelayout.setSpacing(20)
-        self.tab1.layout.addLayout(tab1_insidelayout)
-        self.tab1.layout.addWidget(process_table_widget)
-        self.tab1.setLayout(self.tab1.layout)
+        self.data_tab.layout.addLayout(tab1_insidelayout)
+        self.data_tab.layout.addWidget(process_table_widget)
+        self.data_tab.setLayout(self.data_tab.layout)
 
-        self.tab2.layout = QHBoxLayout(self)
+        self.schemat_tab.layout = QHBoxLayout(self)
 
 
         list_widget = QListWidget()
@@ -116,10 +118,10 @@ class SiMts(QWidget):
 
         #icon_list.addItem(QListWidgetItem(icon_widget))
         #icon_list.addItem(icon_widget1)
-        self.tab2.layout.addWidget(icon_widget, 2)
-        self.tab2.layout.addWidget(list_widget, 4)
+        self.schemat_tab.layout.addWidget(icon_widget, 2)
+        self.schemat_tab.layout.addWidget(list_widget, 4)
 
-        self.tab2.setLayout(self.tab2.layout)
+        self.schemat_tab.setLayout(self.schemat_tab.layout)
 
         # Creating MAIN Vertical layout
         vbox = QVBoxLayout()
