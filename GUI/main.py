@@ -1,9 +1,10 @@
 import sys
 
+from PyQt5.QtCore import Qt, QDataStream
+
 from GUI.file_operations import FileOperations
 from custom_buttons import Button
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
 
 
 # Define title of app
@@ -87,8 +88,10 @@ class SiMts(QWidget):
         pistons_widget.setAutoFillBackground(True)
 
         ## Data for testing
+        self.test_buttons = []
         for i in range(100):
-            pistons_widget.layout().addWidget(Button(f'{i}', self))
+            self.test_buttons.append(Button(f'{i}'))
+            pistons_widget.layout().addWidget(self.test_buttons[i])
         ##
 
         pistons_widget_scroll.setWidget(pistons_widget)
@@ -151,6 +154,18 @@ class SiMts(QWidget):
             self.file_managing.exit_file(app=x, widget=y)
         )
         new_act3.setShortcut("Ctrl+E")
+
+    def dragEnterEvent(self, event):
+        event.accept()
+
+    def dropEvent(self, event):
+        stream = QDataStream(event.mimeData().data('myApp/QtWidget'))
+        index = int(stream.readQString())
+        position = event.pos()
+        self.test_buttons[index].move(position)
+
+        event.setDropAction(Qt.MoveAction)
+        event.accept()
 
     def schematic(self):
         pass
