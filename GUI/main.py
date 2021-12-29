@@ -15,6 +15,7 @@ TOP = 200
 WIDTH = 1024
 HEIGHT = 200
 
+
 class SiMts(QWidget):
 
     def __init__(self):
@@ -27,9 +28,7 @@ class SiMts(QWidget):
 
         self.textEditor1 = QTextEdit()  # Defining data TextBox
         self.textEditor2 = QTextEdit()  # Defining results TextBox
-        self.menubar = QMenuBar(self)   # Defining toolbarmenu object
-        self.data_tab = QWidget()           # Defining tab for data,results and plot
-        self.schemat_tab = QWidget()           # Defining tab for schematic
+        self.menubar = QMenuBar()   # Defining toolbarmenu object
 
         self.stripMenu()  # Creating Strip Menu
 
@@ -74,11 +73,33 @@ class SiMts(QWidget):
         process_table_widget.setRowCount(4)
         process_table_widget.setColumnCount(2)
 
-        # Creating Tabs Layous
-        tabs = QTabWidget()
-        tabs.addTab(self.data_tab, "Dane")
-        tabs.addTab(self.schemat_tab, "Schemat")
+        # Creating Schemas_Tab
+        self.schemat_tab = QWidget()
+        self.schemat_tab.layout = QHBoxLayout()
 
+        list_widget = QWidget()
+        list_widget.setLayout(QHBoxLayout())
+        list_widget.setAutoFillBackground(True)
+
+        pistons_widget_scroll = QScrollArea()
+        pistons_widget = QWidget()
+        pistons_widget.setLayout(QVBoxLayout())
+        pistons_widget.setAutoFillBackground(True)
+
+        ## Data for testing
+        for i in range(100):
+            pistons_widget.layout().addWidget(Button(f'{i}', self))
+        ##
+
+        pistons_widget_scroll.setWidget(pistons_widget)
+        pistons_widget_scroll.setWidgetResizable(True)
+
+        self.schemat_tab.layout.addWidget(pistons_widget_scroll, 2)
+        self.schemat_tab.layout.addWidget(list_widget, 4)
+        self.schemat_tab.setLayout(self.schemat_tab.layout)
+
+        # Creating Data_Tab
+        self.data_tab = QWidget()
         self.data_tab.layout = QHBoxLayout(self)
 
         tab1_insidelayout = QVBoxLayout(self)
@@ -86,49 +107,20 @@ class SiMts(QWidget):
         tab1_insidelayout.addLayout(hbox2)
         tab1_insidelayout.addStretch(1)
         tab1_insidelayout.setSpacing(20)
+
         self.data_tab.layout.addLayout(tab1_insidelayout)
         self.data_tab.layout.addWidget(process_table_widget)
         self.data_tab.setLayout(self.data_tab.layout)
 
-        self.schemat_tab.layout = QHBoxLayout(self)
-
-
-        list_widget = QListWidget()
-        list_widget.setAcceptDrops(True)
-        list_widget.setDragEnabled(True)
-        list_widget.setSpacing(20)
-
-        icon_list = QListWidget()
-        icon = Button('Button', self)
-        icon.setStyleSheet("background-image : test.jpg")
-        icon2 = QPixmap("test1.jpg")
-
-        icon_widget = QLabel()
-        icon_widget1 = QLabel()
-
-
-
-        #icon_widget.setPixmap(icon)
-        icon_widget1.setPixmap(icon2)
-
-        #icon_widget.setGeometry(200, 200, 200, 200)
-        # icon_widget.setAcceptDrops(True)
-        # icon_widget.setDragEnabled(True)
-        # icon_widget.setViewMode(QListWidget.IconMode)
-
-        #icon_list.addItem(QListWidgetItem(icon_widget))
-        #icon_list.addItem(icon_widget1)
-        self.schemat_tab.layout.addWidget(icon_widget, 2)
-        self.schemat_tab.layout.addWidget(list_widget, 4)
-
-        self.schemat_tab.setLayout(self.schemat_tab.layout)
+        # Creating Tabs Layout
+        tabs = QTabWidget()
+        tabs.addTab(self.schemat_tab, "Schemat")
+        tabs.addTab(self.data_tab, "Dane")
 
         # Creating MAIN Vertical layout
         vbox = QVBoxLayout()
-
         vbox.addWidget(self.menubar)
         vbox.addWidget(tabs)
-
         self.setLayout(vbox)
 
     def stripMenu(self):
