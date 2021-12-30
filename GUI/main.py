@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtCore import Qt, QDataStream
+from PyQt5.QtCore import Qt, QDataStream, QPoint
 
 from GUI.file_operations import FileOperations
 from custom_buttons import Button
@@ -36,10 +36,11 @@ class SiMts(QWidget):
         self.doLayout()  # Creating Layout
 
     def doLayout(self):
+        self.setMouseTracking(True)
         """  Defining Layout parameters """
         # Setting Window Title, and geometry
-        self.setAcceptDrops(True)
         self.setWindowTitle(TITLE)
+        self.setAcceptDrops(True)
         self.setGeometry(LEFT, TOP, WIDTH, HEIGHT)
 
         # Creating widgets
@@ -78,27 +79,29 @@ class SiMts(QWidget):
         self.schemat_tab = QWidget()
         self.schemat_tab.layout = QHBoxLayout()
 
-        list_widget = QWidget()
-        list_widget.setLayout(QHBoxLayout())
-        list_widget.setAutoFillBackground(True)
+        self.list_widget = QWidget()
+        self.list_widget.setLayout(QHBoxLayout())
+        self.list_widget.setAutoFillBackground(True)
+        self.list_widget.setAcceptDrops(True)
 
-        pistons_widget_scroll = QScrollArea()
-        pistons_widget = QWidget()
-        pistons_widget.setLayout(QVBoxLayout())
-        pistons_widget.setAutoFillBackground(True)
+        self.pistons_widget_scroll = QScrollArea()
+        self.pistons_widget = QWidget()
+        self.pistons_widget.setAcceptDrops(True)
+        self.pistons_widget.setLayout(QVBoxLayout())
+        self.pistons_widget_scroll.setAutoFillBackground(True)
 
         ## Data for testing
         self.test_buttons = []
         for i in range(100):
             self.test_buttons.append(Button(f'{i}'))
-            pistons_widget.layout().addWidget(self.test_buttons[i])
+            self.pistons_widget.layout().addWidget(self.test_buttons[i])
         ##
 
-        pistons_widget_scroll.setWidget(pistons_widget)
-        pistons_widget_scroll.setWidgetResizable(True)
+        self.pistons_widget_scroll.setWidget(self.pistons_widget)
+        self.pistons_widget_scroll.setWidgetResizable(True)
 
-        self.schemat_tab.layout.addWidget(pistons_widget_scroll, 2)
-        self.schemat_tab.layout.addWidget(list_widget, 4)
+        self.schemat_tab.layout.addWidget(self.pistons_widget_scroll, 2)
+        self.schemat_tab.layout.addWidget(self.list_widget, 4)
         self.schemat_tab.setLayout(self.schemat_tab.layout)
 
         # Creating Data_Tab
@@ -129,7 +132,7 @@ class SiMts(QWidget):
     def stripMenu(self):
         """  Creating strip menu """
         s_menu1 = self.menubar.addMenu("Plik")        # Adding toolbar option1
-        s_menu2 = self.menubar.addMenu("Eksportuj")     # Adding toolbar option2
+        s_menu2 = self.menubar.addMenu("Eksportuj")   # Adding toolbar option2
         new_act1 = QAction("Otwórz", self)            # Creating first option
         new_act2 = QAction("Zapisz", self)            # Creating second option
         new_act3 = QAction("Zamknij", self)           # Creating third option
@@ -161,8 +164,19 @@ class SiMts(QWidget):
     def dropEvent(self, event):
         stream = QDataStream(event.mimeData().data('myApp/QtWidget'))
         index = int(stream.readQString())
-        position = event.pos()
-        self.test_buttons[index].move(position)
+
+        x_coreg = (self.width() - self.schemat_tab.width()) + \
+                  (self.schemat_tab.width() - self.pistons_widget.width() - self.list_widget.width())
+        y_coreg = (self.height() - self.schemat_tab.height()) \
+                  + (self.schemat_tab.height() - self.list_widget.height())
+        position = event.pos() - QPoint(x_coreg, y_coreg)
+
+        if position.x() > 200 and position.y() > 9:
+            self.test_buttons[index].setParent(self.list_widget)
+            self.test_buttons[index].show()
+        else:
+            return
+        self.test_buttons[index].move(position - QPoint(self.pistons_widget.width(), 0))
 
         event.setDropAction(Qt.MoveAction)
         event.accept()

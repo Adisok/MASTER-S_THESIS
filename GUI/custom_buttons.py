@@ -1,14 +1,17 @@
 import sys
 
-from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice
+from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice, QPoint
 from PyQt5.QtGui import QDrag
 from PyQt5.QtWidgets import QPushButton, QWidget, QApplication
+
 
 class Button(QPushButton):
 
     def __init__(self, title):
         super().__init__(title)
         self.title = title
+        self.setFixedHeight(100)
+        self.setFixedWidth(100)
 
     def mouseMoveEvent(self, e):
 
@@ -16,7 +19,7 @@ class Button(QPushButton):
 
         drag = QDrag(self)
         drag.setMimeData(mimeData)
-        drag.setHotSpot(e.pos() - self.rect().topLeft())
+        drag.setHotSpot(e.pos())
 
         byteArray = QByteArray()
         stream = QDataStream(byteArray, QIODevice.WriteOnly)
@@ -24,6 +27,10 @@ class Button(QPushButton):
         mimeData.setData('myApp/QtWidget', byteArray)
 
         dropAction = drag.exec_(Qt.MoveAction)
+
+    def moveEvent(self, e):
+        if self.title == "0":
+            print(self.pos())
 
 
 class Example(QWidget):
@@ -36,7 +43,7 @@ class Example(QWidget):
     def initUI(self):
         self.setAcceptDrops(True)
 
-        self.button = Button('Button', self)
+        self.button = Button('Button')
         self.button.move(100, 65)
 
         self.setWindowTitle('Click or Move')
