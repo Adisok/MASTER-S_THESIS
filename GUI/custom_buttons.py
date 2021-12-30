@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice, QPoint
-from PyQt5.QtGui import QDrag
+from PyQt5.QtGui import QDrag, QIcon, QPixmap
 from PyQt5.QtWidgets import QPushButton, QWidget, QApplication
 
 
@@ -12,6 +12,7 @@ class Button(QPushButton):
         self.title = title
         self.setFixedHeight(100)
         self.setFixedWidth(100)
+        self.setStyleSheet(f"background-image : url(images/test.jpg);")
 
     def mouseMoveEvent(self, e):
 
@@ -27,10 +28,6 @@ class Button(QPushButton):
         mimeData.setData('myApp/QtWidget', byteArray)
 
         dropAction = drag.exec_(Qt.MoveAction)
-
-    def moveEvent(self, e):
-        if self.title == "0":
-            print(self.pos())
 
 
 class Example(QWidget):

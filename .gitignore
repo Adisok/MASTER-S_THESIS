@@ -3,6 +3,6 @@ venv/
 __pycache__/
 images_test.py
 test-testu.txt
-test.jpg
-test1.jpg
+GUI/images/test.jpg
+GUI/images/test1.jpg
 todos.txt
