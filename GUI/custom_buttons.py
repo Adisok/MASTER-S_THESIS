@@ -1,8 +1,6 @@
-import sys
-
-from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice, QPoint, QPointF
-from PyQt5.QtGui import QDrag, QIcon, QPixmap, QPainterPath
-from PyQt5.QtWidgets import QPushButton, QWidget, QApplication, QGraphicsScene
+from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice
+from PyQt5.QtGui import QDrag
+from PyQt5.QtWidgets import QPushButton
 
 
 class Button(QPushButton):

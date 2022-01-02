@@ -1,8 +1,6 @@
 import sys
 
-from PyQt5 import QtGui
 from PyQt5.QtCore import Qt, QDataStream, QPoint
-from PyQt5.QtGui import QPainter, QPen
 
 from GUI.drawer import Drawer
 from GUI.file_operations import FileOperations
@@ -82,11 +80,11 @@ class SiMts(QWidget):
         self.schemat_tab = QWidget()
         self.schemat_tab.layout = QHBoxLayout()
 
-        self.list_widget = Drawer()
-        self.list_widget.paintingActive()
-        self.list_widget.setLayout(QHBoxLayout())
-        self.list_widget.setAutoFillBackground(True)
-        self.list_widget.setAcceptDrops(True)
+        self.schemat_widget = Drawer()
+        self.schemat_widget.paintingActive()
+        self.schemat_widget.setLayout(QHBoxLayout())
+        self.schemat_widget.setAutoFillBackground(True)
+        self.schemat_widget.setAcceptDrops(True)
 
         self.pistons_widget_scroll = QScrollArea()
         self.pistons_widget = QWidget()
@@ -105,7 +103,7 @@ class SiMts(QWidget):
         self.pistons_widget_scroll.setWidgetResizable(True)
 
         self.schemat_tab.layout.addWidget(self.pistons_widget_scroll, 2)
-        self.schemat_tab.layout.addWidget(self.list_widget, 4)
+        self.schemat_tab.layout.addWidget(self.schemat_widget, 4)
         self.schemat_tab.setLayout(self.schemat_tab.layout)
 
         # Creating Data_Tab
@@ -170,13 +168,13 @@ class SiMts(QWidget):
         index = int(stream.readQString())
 
         x_coreg = (self.width() - self.schemat_tab.width()) + \
-                  (self.schemat_tab.width() - self.pistons_widget.width() - self.list_widget.width())
+                  (self.schemat_tab.width() - self.pistons_widget.width() - self.schemat_widget.width())
         y_coreg = (self.height() - self.schemat_tab.height()) \
-                  + (self.schemat_tab.height() - self.list_widget.height())
+                  + (self.schemat_tab.height() - self.schemat_widget.height())
         position = event.pos() - QPoint(x_coreg, y_coreg)
 
         if position.x() > 200 and position.y() > 9:
-            self.test_buttons[index].setParent(self.list_widget)
+            self.test_buttons[index].setParent(self.schemat_widget)
             self.test_buttons[index].show()
         else:
             return
