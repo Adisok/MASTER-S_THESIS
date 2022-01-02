@@ -1,7 +1,6 @@
-import sys
-from PyQt5.QtCore import Qt, QPoint, QRect, QLine
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget
-from PyQt5.QtGui import QPixmap, QPainter, QPen, QImage, QColor
+from PyQt5.QtCore import Qt, QLine
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtGui import QPainter, QPen, QImage, QColor
 from numpy import ones,vstack
 from numpy.linalg import lstsq
 
@@ -13,8 +12,7 @@ class Drawer(QWidget):
         self.lines = dict()
         self.firstPoint = self.lastPoint = None
         self.image = QImage(self.size(), QImage.Format_RGB32)
-        self.image.fill(Qt.white)
-        self.setGeometry(100, 100, 500, 300)
+        self.image.fill(QColor("#323232"))
         self.resize(self.image.width(), self.image.height())
         self.j = 0
         self.show()
@@ -32,7 +30,7 @@ class Drawer(QWidget):
                     except KeyError:
                         del self.lines[i]
             self.image = QImage(self.size(), QImage.Format_RGB32)
-            self.image.fill(Qt.white)
+            self.image.fill(QColor("#323232"))
             self.updateImage()
 
     def mouseMoveEvent(self, event):
@@ -79,9 +77,3 @@ class Drawer(QWidget):
         painter.drawImage(dirtyRect, self.image, dirtyRect)
         if self.firstPoint and self.lastPoint:
             painter.drawLine(self.firstPoint, self.lastPoint)
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    mainMenu = Drawer()
-    mainMenu.show()
-    sys.exit(app.exec_())

@@ -1,7 +1,10 @@
 import sys
 
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt, QDataStream, QPoint
+from PyQt5.QtGui import QPainter, QPen
 
+from GUI.drawer import Drawer
 from GUI.file_operations import FileOperations
 from custom_buttons import Button
 from PyQt5.QtWidgets import *
@@ -22,7 +25,7 @@ class SiMts(QWidget):
     def __init__(self):
         super().__init__()
         self.file_managing = FileOperations()
-
+        self.first_point = None
         self.data = [[0], [0]]
         self.plot_itself = None
         self.graphWidget = None
@@ -79,7 +82,8 @@ class SiMts(QWidget):
         self.schemat_tab = QWidget()
         self.schemat_tab.layout = QHBoxLayout()
 
-        self.list_widget = QWidget()
+        self.list_widget = Drawer()
+        self.list_widget.paintingActive()
         self.list_widget.setLayout(QHBoxLayout())
         self.list_widget.setAutoFillBackground(True)
         self.list_widget.setAcceptDrops(True)
