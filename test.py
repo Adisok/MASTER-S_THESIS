@@ -1,5 +1,4 @@
 from rules import Rules
-import pytest
 
 def test_rules_being_defined_properly():
     for i in range(1, 21):

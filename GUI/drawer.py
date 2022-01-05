@@ -1,7 +1,7 @@
-from PyQt5.QtCore import Qt, QLine
+from PyQt5.QtCore import Qt, QLine, QPoint
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPainter, QPen, QImage, QColor
-from numpy import ones,vstack
+from numpy import ones, vstack
 from numpy.linalg import lstsq
 
 
@@ -13,9 +13,8 @@ class Drawer(QWidget):
         self.firstPoint = self.lastPoint = None
         self.image = QImage(self.size(), QImage.Format_RGB32)
         self.image.fill(QColor("#323232"))
-        self.resize(self.image.width(), self.image.height())
         self.j = 0
-        self.show()
+        self.pairs_buttons_and_list = dict()
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -31,22 +30,44 @@ class Drawer(QWidget):
                         del self.lines[i]
             self.image = QImage(self.size(), QImage.Format_RGB32)
             self.image.fill(QColor("#323232"))
+
             self.updateImage()
 
     def mouseMoveEvent(self, event):
         if self.firstPoint:
             self.lastPoint = event.pos()
+            self._line = QLine(self.firstPoint, self.lastPoint)
             self.update()
 
     def mouseReleaseEvent(self, event):
+        buttons = self.children()[1:]
+        if len(buttons) > 0 and self.lastPoint:
+            for i in buttons:
+                if ((x := i.x()) + i.width() > self.lastPoint.x() > x and (y := i.y()) + i.height() > self.lastPoint.y() > y):
+                    self.connect_line_and_button(i, self._line)
+
         if self.firstPoint and self.lastPoint:
             self.updateImage()
+
+    def connect_line_and_button(self, button, line):
+        if button.title in self.pairs_buttons_and_list.keys():
+            self.pairs_buttons_and_list[button.title] = dict(self.pairs_buttons_and_list[str(button.title)], **{str(self.j): line})
+        else:
+            self.pairs_buttons_and_list[button.title] = {str(self.j): line}
+
+    def move_line_and_button(self, button, move):
+        if len(self.lines) > 0:
+            title = str(button.title)
+            for i in range(len(self.pairs_buttons_and_list[title])):
+                line = self.pairs_buttons_and_list[title][str(i)]
+                line.setP2(move + QPoint(50, 50))
+                self.draw_all_lines()
+                self.update()
 
     def updateImage(self):
         if self.firstPoint and self.lastPoint:
             painter = QPainter(self.image)
             painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
-            self._line = QLine(self.firstPoint, self.lastPoint)
             p1 = self._line.p1()
             p2 = self._line.p2()
             points = [(p1.x(), p1.y()), (p2.x(), p2.y())]
@@ -61,14 +82,19 @@ class Drawer(QWidget):
             self.firstPoint = self.lastPoint = None
             self.update()
         else:
-            painter = QPainter(self.image)
-            painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
-            for i in self.lines.values():
-                painter.drawLine(i[0])
-            painter.end()
-            self.j = len(self.lines)
-            self.firstPoint = self.lastPoint = None
+            self.draw_all_lines()
             self.update()
+
+    def draw_all_lines(self):
+        self.image = QImage(self.size(), QImage.Format_RGB32)
+        self.image.fill(QColor("#323232"))
+        painter = QPainter(self.image)
+        painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
+        for i in self.lines.values():
+            painter.drawLine(i[0])
+        painter.end()
+        self.j = len(self.lines)
+        self.firstPoint = self.lastPoint = None
 
     def paintEvent(self, event):
         painter = QPainter(self)

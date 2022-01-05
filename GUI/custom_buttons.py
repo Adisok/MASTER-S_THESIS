@@ -1,9 +1,10 @@
-from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice
+from PyQt5.QtCore import Qt, QMimeData, QDataStream, QByteArray, QIODevice, pyqtSignal
 from PyQt5.QtGui import QDrag
 from PyQt5.QtWidgets import QPushButton
 
 
 class Button(QPushButton):
+    moved = pyqtSignal()
 
     def __init__(self, title):
         super().__init__(title)
@@ -11,9 +12,12 @@ class Button(QPushButton):
         self.setFixedHeight(100)
         self.setFixedWidth(100)
         self.setStyleSheet(f"background-image : url(GUI/images/test.jpg);")
+        self.setAcceptDrops(True)
+
 
     def mouseMoveEvent(self, e):
-
+        if e.buttons() != Qt.LeftButton:
+            return
         mimeData = QMimeData()
 
         drag = QDrag(self)

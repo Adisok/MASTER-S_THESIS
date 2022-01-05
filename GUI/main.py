@@ -98,7 +98,6 @@ class SiMts(QWidget):
             self.test_buttons.append(Button(f'{i}'))
             self.pistons_widget.layout().addWidget(self.test_buttons[i])
         ##
-
         self.pistons_widget_scroll.setWidget(self.pistons_widget)
         self.pistons_widget_scroll.setWidgetResizable(True)
 
@@ -165,7 +164,7 @@ class SiMts(QWidget):
 
     def dropEvent(self, event):
         stream = QDataStream(event.mimeData().data('myApp/QtWidget'))
-        index = int(stream.readQString())
+        index = int(float(stream.readQString()))
 
         x_coreg = (self.width() - self.schemat_tab.width()) + \
                   (self.schemat_tab.width() - self.pistons_widget.width() - self.schemat_widget.width())
@@ -173,19 +172,17 @@ class SiMts(QWidget):
                   + (self.schemat_tab.height() - self.schemat_widget.height())
         position = event.pos() - QPoint(x_coreg, y_coreg)
 
+        if (dx := position.x() - self.test_buttons[index].x() - x_coreg) != 0 and (dy := position.y() - self.test_buttons[index].y() - y_coreg) != 0:
+            self.schemat_widget.move_line_and_button(self.test_buttons[index],
+                                                     position - QPoint(self.pistons_widget.width(), 0))
         if position.x() > 200 and position.y() > 9:
             self.test_buttons[index].setParent(self.schemat_widget)
             self.test_buttons[index].show()
         else:
             return
         self.test_buttons[index].move(position - QPoint(self.pistons_widget.width(), 0))
-
         event.setDropAction(Qt.MoveAction)
         event.accept()
-
-    def schematic(self):
-        pass
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
