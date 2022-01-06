@@ -4,7 +4,7 @@ from PyQt5.QtCore import Qt, QDataStream, QPoint
 
 from GUI.drawer import Drawer
 from GUI.file_operations import FileOperations
-from custom_buttons import Button
+from GUI.grouped_pistons import GroupedPistons
 from PyQt5.QtWidgets import *
 
 
@@ -24,16 +24,14 @@ class SiMts(QWidget):
         super().__init__()
         self.file_managing = FileOperations()
         self.first_point = None
-        self.data = [[0], [0]]
-        self.plot_itself = None
-        self.graphWidget = None
-
         self.textEditor1 = QTextEdit()  # Defining data TextBox
         self.textEditor2 = QTextEdit()  # Defining results TextBox
         self.menubar = QMenuBar()   # Defining toolbarmenu object
+        self.buttons_on_schemat = []
+        self.graphWidget = None # REMOVE IT!!
+        self.plot_itself = None # REMOVE IT!!
 
         self.stripMenu()  # Creating Strip Menu
-
         self.doLayout()  # Creating Layout
 
     def doLayout(self):
@@ -44,7 +42,7 @@ class SiMts(QWidget):
         self.setAcceptDrops(True)
         self.setGeometry(LEFT, TOP, WIDTH, HEIGHT)
 
-        # Creating widgets
+        #### Creating widgets ####
         # Data TextBox
         self.textEditor1.setFixedSize(250, 250)
         self.textEditor1.setReadOnly(True)
@@ -87,17 +85,9 @@ class SiMts(QWidget):
         self.schemat_widget.setAcceptDrops(True)
 
         self.pistons_widget_scroll = QScrollArea()
-        self.pistons_widget = QWidget()
-        self.pistons_widget.setAcceptDrops(True)
-        self.pistons_widget.setLayout(QVBoxLayout())
         self.pistons_widget_scroll.setAutoFillBackground(True)
+        self.pistons_widget = GroupedPistons()
 
-        ## Data for testing
-        self.test_buttons = []
-        for i in range(100):
-            self.test_buttons.append(Button(f'{i}'))
-            self.pistons_widget.layout().addWidget(self.test_buttons[i])
-        ##
         self.pistons_widget_scroll.setWidget(self.pistons_widget)
         self.pistons_widget_scroll.setWidgetResizable(True)
 
@@ -164,7 +154,9 @@ class SiMts(QWidget):
 
     def dropEvent(self, event):
         stream = QDataStream(event.mimeData().data('myApp/QtWidget'))
-        index = int(float(stream.readQString()))
+        index = int(float( (stream := stream.readQString().split(', '))[0]))
+        schemat_index = stream[1]
+        buttons = self.pistons_widget.test_buttons
 
         x_coreg = (self.width() - self.schemat_tab.width()) + \
                   (self.schemat_tab.width() - self.pistons_widget.width() - self.schemat_widget.width())
@@ -172,15 +164,18 @@ class SiMts(QWidget):
                   + (self.schemat_tab.height() - self.schemat_widget.height())
         position = event.pos() - QPoint(x_coreg, y_coreg)
 
-        if (dx := position.x() - self.test_buttons[index].x() - x_coreg) != 0 and (dy := position.y() - self.test_buttons[index].y() - y_coreg) != 0:
-            self.schemat_widget.move_line_and_button(self.test_buttons[index],
+        if (position.x() - buttons[index].x() - x_coreg) != 0 and\
+                (position.y() - buttons[index].y() - y_coreg) != 0 and\
+                schemat_index != "None":
+            self.schemat_widget.move_line_and_button(int(schemat_index),
                                                      position - QPoint(self.pistons_widget.width(), 0))
         if position.x() > 200 and position.y() > 9:
-            self.test_buttons[index].setParent(self.schemat_widget)
-            self.test_buttons[index].show()
+            if  index not in self.schemat_widget.pairs_buttons_and_lines.keys() or schemat_index == "None":
+                self.schemat_widget.add_button(index, position - QPoint(self.pistons_widget.width(), 0))
+            else:
+                self.schemat_widget.move_button(int(schemat_index), position - QPoint(self.pistons_widget.width(), 0))
         else:
             return
-        self.test_buttons[index].move(position - QPoint(self.pistons_widget.width(), 0))
         event.setDropAction(Qt.MoveAction)
         event.accept()
 
