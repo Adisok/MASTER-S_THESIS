@@ -9,12 +9,11 @@ class Drawer(QWidget):
 
     def __init__(self, parent=None):
         super(Drawer, self).__init__(parent)
-        self.lines = dict()
-        self.firstPoint = self.lastPoint = None
-        self.image = QImage(self.size(), QImage.Format_RGB32)
-        self.image.fill(QColor("#323232"))
         self.j = 0
+        self.firstPoint = self.lastPoint = None
+        self.lines = dict()
         self.pairs_buttons_and_list = dict()
+        self.reset_image()
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -28,9 +27,7 @@ class Drawer(QWidget):
                         self.lines[i] = self.lines[i+1]
                     except KeyError:
                         del self.lines[i]
-            self.image = QImage(self.size(), QImage.Format_RGB32)
-            self.image.fill(QColor("#323232"))
-
+            self.reset_image()
             self.updateImage()
 
     def mouseMoveEvent(self, event):
@@ -48,6 +45,14 @@ class Drawer(QWidget):
 
         if self.firstPoint and self.lastPoint:
             self.updateImage()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
+        dirtyRect = event.rect()
+        painter.drawImage(dirtyRect, self.image, dirtyRect)
+        if self.firstPoint and self.lastPoint:
+            painter.drawLine(self.firstPoint, self.lastPoint)
 
     def connect_line_and_button(self, button, line):
         if button.title in self.pairs_buttons_and_list.keys():
@@ -68,15 +73,19 @@ class Drawer(QWidget):
         if self.firstPoint and self.lastPoint:
             painter = QPainter(self.image)
             painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
+
             p1 = self._line.p1()
             p2 = self._line.p2()
             points = [(p1.x(), p1.y()), (p2.x(), p2.y())]
+
             x_coords, y_coords = zip(*points)
             A = vstack([x_coords, ones(len(x_coords))]).T
             a, b = lstsq(A, y_coords, rcond=None)[0]
             function = lambda x, a=a, b=b: a*x + b
+
             self.lines[self.j] = [self._line, function]
             self.j += 1
+
             painter.drawLine(self._line)
             painter.end()
             self.firstPoint = self.lastPoint = None
@@ -85,9 +94,12 @@ class Drawer(QWidget):
             self.draw_all_lines()
             self.update()
 
-    def draw_all_lines(self):
+    def reset_image(self):
         self.image = QImage(self.size(), QImage.Format_RGB32)
         self.image.fill(QColor("#323232"))
+
+    def draw_all_lines(self):
+        self.reset_image()
         painter = QPainter(self.image)
         painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
         for i in self.lines.values():
@@ -95,11 +107,3 @@ class Drawer(QWidget):
         painter.end()
         self.j = len(self.lines)
         self.firstPoint = self.lastPoint = None
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setPen(QPen(Qt.red, 3, Qt.SolidLine))
-        dirtyRect = event.rect()
-        painter.drawImage(dirtyRect, self.image, dirtyRect)
-        if self.firstPoint and self.lastPoint:
-            painter.drawLine(self.firstPoint, self.lastPoint)
