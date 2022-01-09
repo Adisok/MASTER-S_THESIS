@@ -31,7 +31,7 @@ class Drawer(QWidget):
     def connect_line_and_button(self, schemat_index, line):
         if "lines" in self.pairs_buttons_and_lines[schemat_index].keys():
             line_count_for_button = len(self.pairs_buttons_and_lines[schemat_index]["lines"])
-            self.pairs_buttons_and_lines[schemat_index]["lines"] = dict(self.pairs_buttons_and_lines[schemat_index], **{line_count_for_button: line})
+            self.pairs_buttons_and_lines[schemat_index]["lines"].update({line_count_for_button: line})
         else:
             self.pairs_buttons_and_lines[schemat_index]["lines"] = {0: line}
 

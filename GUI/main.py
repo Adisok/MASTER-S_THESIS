@@ -154,9 +154,8 @@ class SiMts(QWidget):
 
     def dropEvent(self, event):
         stream = QDataStream(event.mimeData().data('myApp/QtWidget'))
-        index = int(float( (stream := stream.readQString().split(', '))[0]))
+        index = int(float((stream := stream.readQString().split(', '))[0]))
         schemat_index = stream[1]
-        buttons = self.pistons_widget.test_buttons
 
         x_coreg = (self.width() - self.schemat_tab.width()) + \
                   (self.schemat_tab.width() - self.pistons_widget.width() - self.schemat_widget.width())
@@ -164,11 +163,19 @@ class SiMts(QWidget):
                   + (self.schemat_tab.height() - self.schemat_widget.height())
         position = event.pos() - QPoint(x_coreg, y_coreg)
 
-        if (position.x() - buttons[index].x() - x_coreg) != 0 and\
-                (position.y() - buttons[index].y() - y_coreg) != 0 and\
-                schemat_index != "None":
+        if stream[2] != "None":
+            group_number = int(stream[2])
+            group = self.pistons_widget.groups[group_number]
+            buttons = group.group_buttons
+            if (position.x() - buttons[index].x() - x_coreg) != 0 and \
+                    (position.y() - buttons[index].y() - y_coreg) != 0 and \
+                    schemat_index != "None":
+                self.schemat_widget.move_line_and_button(int(schemat_index),
+                                                         position - QPoint(self.pistons_widget.width(), 0))
+        else:
             self.schemat_widget.move_line_and_button(int(schemat_index),
                                                      position - QPoint(self.pistons_widget.width(), 0))
+
         if position.x() > 200 and position.y() > 9:
             if  index not in self.schemat_widget.pairs_buttons_and_lines.keys() or schemat_index == "None":
                 self.schemat_widget.add_button(index, position - QPoint(self.pistons_widget.width(), 0))
