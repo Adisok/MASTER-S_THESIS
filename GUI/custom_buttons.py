@@ -13,8 +13,9 @@ class Button(QPushButton):
         self.group_name=group
         self.setFixedHeight(100)
         self.setFixedWidth(100)
+        self.image_path = image_path
         if image_path is not None:
-            self.setStyleSheet(f"background-image : url({image_path});")
+            self.setStyleSheet(f"background-image : url({self.image_path});")
         self.setAcceptDrops(True)
 
 

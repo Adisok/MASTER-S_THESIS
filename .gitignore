@@ -6,3 +6,5 @@ test-testu.txt
 GUI/images/test.jpg
 GUI/images/test1.jpg
 todos.txt
+.DS_Store
+GUI/.DS_Store

@@ -42,7 +42,7 @@ class PistonGroups(QGroupBox):
         self.group_buttons = []
         for button_info in info["buttons"]:
             title = button_info["text"]
-            path_icon = "GUI/images/test.jpg"
+            path_icon = button_info["path_icon"]
             btn = Button(title, image_path=path_icon, group=group)
             self.group_buttons.append(btn)
             self.hlay.addWidget(btn)

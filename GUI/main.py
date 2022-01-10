@@ -178,7 +178,7 @@ class SiMts(QWidget):
 
         if position.x() > 200 and position.y() > 9:
             if  index not in self.schemat_widget.pairs_buttons_and_lines.keys() or schemat_index == "None":
-                self.schemat_widget.add_button(index, position - QPoint(self.pistons_widget.width(), 0))
+                self.schemat_widget.add_button(index, position - QPoint(self.pistons_widget.width(), 0), buttons[index].image_path)
             else:
                 self.schemat_widget.move_button(int(schemat_index), position - QPoint(self.pistons_widget.width(), 0))
         else:

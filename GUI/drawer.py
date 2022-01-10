@@ -17,9 +17,9 @@ class Drawer(QWidget):
         self.pairs_buttons_and_lines = dict()
         self.reset_image()
 
-    def add_button(self, button_to_add, position):
+    def add_button(self, button_to_add, position, image_path):
         button_count = len(self.pairs_buttons_and_lines)
-        self.pairs_buttons_and_lines[button_count] = {"button": Button(title=str(button_to_add), second_title=button_count)}
+        self.pairs_buttons_and_lines[button_count] = {"button": Button(title=str(button_to_add), second_title=button_count, image_path=image_path)}
         self.pairs_buttons_and_lines[button_count]["button"].setParent(self)
         self.pairs_buttons_and_lines[button_count]["button"].move(position)
         self.pairs_buttons_and_lines[button_count]["button"].show()
