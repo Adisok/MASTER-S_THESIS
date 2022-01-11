@@ -1,7 +1,5 @@
 import sys
 
-from PyQt5.QtCore import Qt, QDataStream, QPoint
-
 from GUI.drawer import Drawer
 from GUI.file_operations import FileOperations
 from GUI.grouped_pistons import GroupedPistons
@@ -78,14 +76,12 @@ class SiMts(QWidget):
         self.schemat_tab = QWidget()
         self.schemat_tab.layout = QHBoxLayout()
 
+
         self.schemat_widget = Drawer()
-        self.schemat_widget.paintingActive()
         self.schemat_widget.setLayout(QHBoxLayout())
-        self.schemat_widget.setAutoFillBackground(True)
-        self.schemat_widget.setAcceptDrops(True)
+        self.schemat_widget.setStyleSheet("background-color: #323232;")
 
         self.pistons_widget_scroll = QScrollArea()
-        self.pistons_widget_scroll.setAutoFillBackground(True)
         self.pistons_widget = GroupedPistons()
 
         self.pistons_widget_scroll.setWidget(self.pistons_widget)
@@ -149,42 +145,6 @@ class SiMts(QWidget):
         )
         new_act3.setShortcut("Ctrl+E")
 
-    def dragEnterEvent(self, event):
-        event.accept()
-
-    def dropEvent(self, event):
-        stream = QDataStream(event.mimeData().data('myApp/QtWidget'))
-        index = int(float((stream := stream.readQString().split(', '))[0]))
-        schemat_index = stream[1]
-
-        x_coreg = (self.width() - self.schemat_tab.width()) + \
-                  (self.schemat_tab.width() - self.pistons_widget.width() - self.schemat_widget.width())
-        y_coreg = (self.height() - self.schemat_tab.height()) \
-                  + (self.schemat_tab.height() - self.schemat_widget.height())
-        position = event.pos() - QPoint(x_coreg, y_coreg)
-
-        if stream[2] != "None":
-            group_number = int(stream[2])
-            group = self.pistons_widget.groups[group_number]
-            buttons = group.group_buttons
-            if (position.x() - buttons[index].x() - x_coreg) != 0 and \
-                    (position.y() - buttons[index].y() - y_coreg) != 0 and \
-                    schemat_index != "None":
-                self.schemat_widget.move_line_and_button(int(schemat_index),
-                                                         position - QPoint(self.pistons_widget.width(), 0))
-        else:
-            self.schemat_widget.move_line_and_button(int(schemat_index),
-                                                     position - QPoint(self.pistons_widget.width(), 0))
-
-        if position.x() > 200 and position.y() > 9:
-            if  index not in self.schemat_widget.pairs_buttons_and_lines.keys() or schemat_index == "None":
-                self.schemat_widget.add_button(index, position - QPoint(self.pistons_widget.width(), 0), buttons[index].image_path)
-            else:
-                self.schemat_widget.move_button(int(schemat_index), position - QPoint(self.pistons_widget.width(), 0))
-        else:
-            return
-        event.setDropAction(Qt.MoveAction)
-        event.accept()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

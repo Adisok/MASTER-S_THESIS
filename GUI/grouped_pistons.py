@@ -12,12 +12,6 @@ class GroupedPistons(QWidget):
         self.setLayout(QVBoxLayout())
         self.group_buttons()
 
-    # def add_buttons(self):
-    #     self.test_buttons = []
-    #     for i in range(10):
-    #         self.test_buttons.append(Button(f'{i}'))
-    #         self.layout().addWidget(self.test_buttons[i])
-
     def group_buttons(self):
         j=0
         for button in buttons_data:
