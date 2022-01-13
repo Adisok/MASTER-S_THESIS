@@ -43,6 +43,22 @@ class Drawer(QGraphicsView):
         self.source = None
         self.buttons = []
 
+    def return_values(self):
+        flow = {"Y": [] , "fp": [], "fk": []}
+        if "piston" in self.buttons[0].image_path:
+            flow["Y"].append(1)
+            flow["fp"].append(1)
+            flow["fk"].append(0)
+        if "valve" in self.buttons[-1].image_path:
+            flow["Y"].append(0)
+            flow["fp"].append(0)
+            flow["fk"].append(1)
+
+        flow["Y"].append(1)
+        flow["fp"].append(1)
+        flow["fk"].append(0)
+        return flow
+
     def add_button(self, button_to_add, position, image_path):
         button_count = len(self.buttons)
         self.buttons.append(Button(title=str(button_to_add), second_title=button_count, image_path=image_path, parent=self))

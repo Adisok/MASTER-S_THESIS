@@ -16,6 +16,7 @@ WIDTH = 1024
 HEIGHT = 200
 
 
+
 class SiMts(QWidget):
 
     def __init__(self):
@@ -83,6 +84,7 @@ class SiMts(QWidget):
 
         self.pistons_widget_scroll = QScrollArea()
         self.pistons_widget = GroupedPistons()
+        self.pistons_widget.wynik.get_values.connect(self.return_value)
 
         self.pistons_widget_scroll.setWidget(self.pistons_widget)
         self.pistons_widget_scroll.setWidgetResizable(True)
@@ -115,6 +117,10 @@ class SiMts(QWidget):
         vbox.addWidget(self.menubar)
         vbox.addWidget(tabs)
         self.setLayout(vbox)
+
+    def return_value(self):
+        self.pistons_widget.wynik.values = self.schemat_widget.return_values()
+
 
     def stripMenu(self):
         """  Creating strip menu """

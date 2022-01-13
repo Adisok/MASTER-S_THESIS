@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel
 from buttons_data import data as buttons_data
 from GUI.custom_buttons import Button
+from math_maker import RuleChecker
 
 
 class GroupedPistons(QWidget):
@@ -11,6 +12,8 @@ class GroupedPistons(QWidget):
         self.groups = []
         self.setLayout(QVBoxLayout())
         self.group_buttons()
+        self.wynik = RuleChecker()
+        self.layout().addWidget(self.wynik)
 
     def group_buttons(self):
         j=0
@@ -40,5 +43,6 @@ class PistonGroups(QGroupBox):
             btn = Button(title, image_path=path_icon, group=group)
             self.group_buttons.append(btn)
             self.hlay.addWidget(btn)
+
         self.hlay.setContentsMargins(5, 5, 5, 5)
         self.setFixedSize(self.sizeHint())
