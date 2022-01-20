@@ -80,7 +80,7 @@ class SiMts(QWidget):
 
         self.schemat_widget = Drawer()
         self.schemat_widget.setLayout(QHBoxLayout())
-        self.schemat_widget.setStyleSheet("background-color: #323232;")
+        self.schemat_widget.setStyleSheet("background-color: white;")#323232;")
 
         self.pistons_widget_scroll = QScrollArea()
         self.pistons_widget = GroupedPistons()

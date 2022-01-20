@@ -2,7 +2,7 @@ data = [{
         "title": " First Group",
         "buttons": [{
                 "text": "0",
-                "path_icon": "GUI/images/piston",
+                "path_icon": "GUI/images/piston1",
             },
         ]
     },
@@ -10,7 +10,11 @@ data = [{
         "title": "Second Group",
         "buttons": [{
                 "text": "0",
-                "path_icon": "GUI/images/valve",
+                "path_icon": "GUI/images/monovalve",
+            },
+            {
+                "text": "1",
+                "path_icon": "GUI/images/bivalve",
             },
         ]
     }

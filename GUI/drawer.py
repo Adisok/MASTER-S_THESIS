@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import  QGraphicsScene, QGraphicsView, QMenu, QGraphicsLine
 from PyQt5.QtGui import  QPainterPathStroker
 
 from GUI.custom_buttons import Button
+from math_maker import ProcessAlgorithmMaker
 
 
 class GraphicsLineItem(QGraphicsLineItem):
@@ -33,6 +34,7 @@ class GraphicsLineItem(QGraphicsLineItem):
     def move(self):
         self.setLine(QLineF(self.source.pos(), self.destination.pos()))
 
+
 class Drawer(QGraphicsView):
 
     def __init__(self, parent=None):
@@ -42,26 +44,26 @@ class Drawer(QGraphicsView):
         self.setSceneRect(QRectF(self.viewport().rect()))
         self.source = None
         self.buttons = []
+        self.valves_count = 0
+        self.pistons_count = 0
 
     def return_values(self):
-        flow = {"Y": [] , "fp": [], "fk": []}
-        if "piston" in self.buttons[0].image_path:
-            flow["Y"].append(1)
-            flow["fp"].append(1)
-            flow["fk"].append(0)
-        if "valve" in self.buttons[-1].image_path:
-            flow["Y"].append(0)
-            flow["fp"].append(0)
-            flow["fk"].append(1)
-
-        flow["Y"].append(1)
-        flow["fp"].append(1)
-        flow["fk"].append(0)
+        self.proces_algorithm_maker = ProcessAlgorithmMaker(self.buttons)
+        crocs = self.proces_algorithm_maker.make_algorithm()
+        flow = []
+        for i, j in crocs.items():
+            print(i, j)
+            flow.append(j)
         return flow
 
     def add_button(self, button_to_add, position, image_path):
-        button_count = len(self.buttons)
-        self.buttons.append(Button(title=str(button_to_add), second_title=button_count, image_path=image_path, parent=self))
+        if "valve" in image_path:
+            self.buttons.append(Button(title=str(button_to_add), second_title=self.valves_count, image_path=image_path,parent=self))
+            self.valves_count += 1
+        if "piston" in image_path:
+            self.buttons.append(Button(title=str(button_to_add), second_title=self.pistons_count, image_path=image_path,parent=self))
+            self.pistons_count += 1
+
         self.buttons[-1].move(position)
         self.buttons[-1].connectionRequested.connect(self.connectButton)
         self.buttons[-1].show()

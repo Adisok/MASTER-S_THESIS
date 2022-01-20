@@ -11,21 +11,24 @@ class Button(QPushButton):
         super().__init__(title, parent)
         self.second_title = second_title
         self.title = title
-        self.group_name=group
+        self.group_name = group
         self.setFixedHeight(100)
         self.setFixedWidth(100)
-        if "valve" in image_path:
-            self.setFixedWidth(150)
         self.image_path = image_path
+        if "valve" in self.image_path:
+            self.setFixedWidth(150)
+        if "mono" in self.image_path:
+            self.state = [1, 0]    # Y1 i not(Y1)
+        elif "bi" in self.image_path:
+            self.state = [1, 0]     # Y1 i Y2
+        elif "piston" in self.image_path:
+            self.state = [1, 0]     # WP1 i WP2
         if image_path is not None:
-            self.setStyleSheet(f"background-image : url({self.image_path});")
-        self.setAcceptDrops(True)
+            self.setStyleSheet(f"background-image : url({image_path});border :3px solid white")
         if self.second_title is not None:
             self.setContextMenuPolicy(Qt.CustomContextMenu)
             self.customContextMenuRequested.connect(self.showMenu)
-
-        self.state = 0
-
+        self.setAcceptDrops(True)
 
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.LeftButton:
@@ -43,8 +46,14 @@ class Button(QPushButton):
 
             self.moved.emit()
 
-
     def showMenu(self):
         menu = QMenu()
         menu.addAction("connect", lambda: self.connectionRequested.emit(self))
+        menu.addAction("change_initial_state", lambda: self.change_state())
         menu.exec_(self.cursor().pos())
+
+    def change_state(self):
+        if "piston" in self.image_path:
+            self.state = self.state[::-1]
+            self.setStyleSheet(f"background-image : url(GUI/images/piston{self.state[0]}); border :3px solid white")
+            print(self.state)

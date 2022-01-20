@@ -27,7 +27,7 @@ def rule_3(expected, fp, fk):
 def rule_4(expected, fp, fk):
     value = lambda f_ki, J_j: (not(f_ki)) * J_j
     bool_check = True
-
+    return False
     count_0 = fk.count(0)
     count_1 = fk.count(1)
     for i in range(len(expected)):
