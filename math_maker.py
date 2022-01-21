@@ -42,60 +42,45 @@ class ProcessAlgorithmMaker:
             if "valve" in i.image_path:
                 valves.append(i)
 
+        pairs = []
+        for i in range(len(pistons)):
+            pairs.append((pistons[i], valves[i]))
+
         steps = len(valves)*2
-        crocs ={}
-        Y = []
-        fp = []
-        fk = []
+        crocs = {}
         #check for pair, bo musze wiedzic ktore
         # warunki fpi i fki z pistona
         # dla ktorego valve
         # Rozpatruje kazdy zawor jako osobny krok, wiec fp i fk sa to wartosci przed i po sygnale z zaworu
         # TODO OBLICZANIE ROWNANIA SCHEMATOWEGO DLA KAZDEGO Z SYGNALOW
-        current_valve = 0
-        current_piston = 0
-        current_left_state = 0
-        current_right_state = 1
-        for i in range(steps):
-
-            fp.append(pistons[current_piston].state[current_left_state])
-            Y.append(valves[current_valve].state[current_left_state])
-            fk.append(pistons[current_piston].state[current_right_state])
-            current_left_state += 1
-            current_right_state -= 1
-
-            if i % 2 == 1:
-                crocs[current_valve] = {"Y": Y, "fp": fp, "fk": fk}
-                Y = []
-                fp = []
-                fk = []
-                current_valve += 1
-                current_piston += 1
-                current_left_state = 0
-                current_right_state = 1
-                if "bi" in valves[current_valve-1].image_path:
-                    valves.insert(current_valve, valves[current_valve-1])
-                    valves[current_valve].state = valves[current_valve].state[::-1]
-                    for i in range(2):
-                        fp.append(pistons[current_piston-1].state[current_left_state])
-                        Y.append(valves[current_valve].state[current_left_state])
-                        fk.append(pistons[current_piston-1].state[current_right_state])
-                        current_left_state += 1
-                        current_right_state -= 1
-                    crocs[current_valve] = {"Y": Y, "fp": fp, "fk": fk}
-                    Y = []
-                    fp = []
-                    fk = []
-                    current_valve += 1
-                    current_left_state = 0
-                    current_right_state = 1
                     #POdziel stepy na takty i wstrzykuj 3artosci logiczne
                     # dla kazdego z sygnalow
 
                     # WAZNE - WSKAZNIKI POLOZENIA INNYCH PISTONOW TEZ MUSZA MIEC
                     # 1 albo 0 az do momentu zmiany stanu, czyli gdy nadejdzie ich kolej
 
-        algorithm = []
-        for i,j in crocs.items():
-            pass
+        algorithm = dict()
+        groups = []
+
+        for i in range(len(pairs)):
+            temp_table = dict()
+            valve = pairs[i][1]
+            piston = pairs[i][0]
+            temp_table[f"Y{valve.second_title}"] = [valve.state]
+            temp_table[f"X{piston.left_index}"] = [piston.left_state]
+            temp_table[f"X{piston.right_index}"] = [piston.right_state]
+            groups.append(temp_table)
+
+        print(groups)
+        for i in range(steps*2-1):
+            current_group = 0
+            for j in groups:
+                try:
+                    j[f"Y{current_group}"].append(pairs[current_group][1].state)
+                    j[f"X{current_group*2+1}"].append(pairs[current_group][0].left_state)
+                    j[f"X{current_group*2+2}"].append(pairs[current_group][0].right_state)
+                except KeyError:
+                    for k, l in j.items():
+                        j[k].append(l[0])
+        print(groups)
         return crocs

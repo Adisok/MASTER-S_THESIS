@@ -18,11 +18,19 @@ class Button(QPushButton):
         if "valve" in self.image_path:
             self.setFixedWidth(150)
         if "mono" in self.image_path:
-            self.state = [1, 0]    # Y1 i not(Y1)
+            if self.second_title == 0:
+                self.state = 1  # Y1 i not(Y1)
+            else:
+                self.state = 0
         elif "bi" in self.image_path:
             self.state = [1, 0]     # Y1 i Y2
         elif "piston" in self.image_path:
-            self.state = [1, 0]     # WP1 i WP2
+            self.left_state = 1
+            self.right_state = 0
+            if self.second_title is not None:
+                self.left_index = self.second_title * 2 + 1
+                self.right_index = self.left_index + 1
+
         if image_path is not None:
             self.setStyleSheet(f"background-image : url({image_path});border :3px solid white")
         if self.second_title is not None:
@@ -54,6 +62,12 @@ class Button(QPushButton):
 
     def change_state(self):
         if "piston" in self.image_path:
-            self.state = self.state[::-1]
+            self.left_state = int(not(self.left_state))
+            self.right_state = int(not(self.right_state))
+            self.setStyleSheet(f"background-image : url(GUI/images/piston{self.state[0]}); border :3px solid white")
+            print(self.left_state, self.right_state)
+        elif "mono" in self.image_path:
+            self.state = int(not(self.state))
             self.setStyleSheet(f"background-image : url(GUI/images/piston{self.state[0]}); border :3px solid white")
             print(self.state)
+
