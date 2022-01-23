@@ -17,13 +17,11 @@ class Button(QPushButton):
         self.image_path = image_path
         if "valve" in self.image_path:
             self.setFixedWidth(150)
-        if "mono" in self.image_path:
+        if "mono" in self.image_path or "bi" in self.image_path:
             if self.second_title == 0:
                 self.state = 1  # Y1 i not(Y1)
             else:
                 self.state = 0
-        elif "bi" in self.image_path:
-            self.state = [1, 0]     # Y1 i Y2
         elif "piston" in self.image_path:
             self.left_state = 1
             self.right_state = 0
@@ -60,14 +58,16 @@ class Button(QPushButton):
         menu.addAction("change_initial_state", lambda: self.change_state())
         menu.exec_(self.cursor().pos())
 
-    def change_state(self):
+    def change_state(self, wchich_one=None):
         if "piston" in self.image_path:
-            self.left_state = int(not(self.left_state))
-            self.right_state = int(not(self.right_state))
-            self.setStyleSheet(f"background-image : url(GUI/images/piston{self.state[0]}); border :3px solid white")
-            print(self.left_state, self.right_state)
-        elif "mono" in self.image_path:
+            if wchich_one == "left":
+                self.left_state = int(not(self.left_state))
+            elif wchich_one == "right":
+                self.right_state = int(not(self.right_state))
+        elif "mono" in self.image_path or "bi" in self.image_path:
             self.state = int(not(self.state))
-            self.setStyleSheet(f"background-image : url(GUI/images/piston{self.state[0]}); border :3px solid white")
-            print(self.state)
+
+    def change_picture(self):
+        self.setStyleSheet(f"background-image : url(GUI/images/piston{self.left_state}); border :3px solid white")
+        self.change_state()
 
