@@ -62,29 +62,6 @@ class SiMts(QWidget):
         self.textEditor2.setFixedSize(250, 250)
         self.textEditor2.setReadOnly(True)
 
-        label1 = QLabel("Dane")
-        label2 = QLabel("Wyniki")
-
-        """  Creating main layout """
-        # Creating Horizontal Layout for DATA
-        hbox1 = QVBoxLayout()
-        hbox1.addWidget(label1)
-        hbox1.addWidget(self.textEditor1)
-        hbox1.addStretch(1)
-        hbox1.setSpacing(10)
-
-        # Creating Horizontal Layout for RESULTS
-        hbox2 = QVBoxLayout()
-        hbox2.addWidget(label2)
-        hbox2.addWidget(self.textEditor2)
-        hbox2.addStretch(1)
-        hbox2.setSpacing(10)
-
-        # Creating Vertical Layout for PLOT
-        process_table_widget = QTableWidget()
-        process_table_widget.setRowCount(4)
-        process_table_widget.setColumnCount(2)
-
         # Creating Schemas_Tab
         self.schemat_tab = QWidget()
         self.schemat_tab.layout = QHBoxLayout()
@@ -105,29 +82,10 @@ class SiMts(QWidget):
         self.schemat_tab.layout.addWidget(self.schemat_widget, 4)
         self.schemat_tab.setLayout(self.schemat_tab.layout)
 
-        # Creating Data_Tab
-        self.data_tab = RuleChecker()
-        self.data_tab.layout = QHBoxLayout(self)
-
-        tab1_insidelayout = QVBoxLayout(self)
-        tab1_insidelayout.addLayout(hbox1)
-        tab1_insidelayout.addLayout(hbox2)
-        tab1_insidelayout.addStretch(1)
-        tab1_insidelayout.setSpacing(20)
-
-        self.data_tab.layout.addLayout(tab1_insidelayout)
-        self.data_tab.layout.addWidget(process_table_widget)
-        self.data_tab.setLayout(self.data_tab.layout)
-
-        # Creating Tabs Layout
-        tabs = QTabWidget()
-        tabs.addTab(self.schemat_tab, "Schemat")
-        tabs.addTab(self.data_tab, "Dane")
-
         # Creating MAIN Vertical layout
         vbox = QVBoxLayout()
         vbox.addWidget(self.menubar)
-        vbox.addWidget(tabs)
+        vbox.addWidget(self.schemat_tab)
         self.setLayout(vbox)
 
     def return_value(self):
