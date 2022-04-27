@@ -2,7 +2,7 @@ from itertools import product
 
 
 def check_for_false(rule_list):
-    return not(False in rule_list)
+    return not (False in rule_list)
 
 
 def calculate_value(expected, func, fp, fk, params):

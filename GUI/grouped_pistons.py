@@ -5,7 +5,6 @@ from math_maker import RuleChecker
 
 
 class GroupedPistons(QWidget):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setAcceptDrops(True)
@@ -16,7 +15,7 @@ class GroupedPistons(QWidget):
         self.layout().addWidget(self.wynik)
 
     def group_buttons(self):
-        j=0
+        j = 0
         for button in buttons_data:
             group = PistonGroups(button, group=j)
             self.layout().addWidget(group)
@@ -27,7 +26,9 @@ class GroupedPistons(QWidget):
         for group in self.groups:
             for i in group:
                 if button_title == i.title:
-                     return self.layout().addWidget(self.group.hlay.addWidget(Button(int(button_title))))
+                    return self.layout().addWidget(
+                        self.group.hlay.addWidget(Button(int(button_title)))
+                    )
 
 
 class PistonGroups(QGroupBox):

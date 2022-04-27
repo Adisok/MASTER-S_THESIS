@@ -3,10 +3,24 @@ import sys
 from GUI.drawer import Drawer
 from GUI.file_operations import FileOperations
 from GUI.grouped_pistons import GroupedPistons
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import (
+    QApplication,
+    QAction,
+    QWidget,
+    QTabWidget,
+    QTextEdit,
+    QMenuBar,
+    QLabel,
+    QHBoxLayout,
+    QScrollArea,
+    QVBoxLayout,
+    QTableWidget,
+)
 
 
 # Define title of app
+from math_maker import RuleChecker
+
 TITLE = "PneuSim"
 
 # Define size of window
@@ -16,19 +30,17 @@ WIDTH = 1024
 HEIGHT = 200
 
 
-
 class SiMts(QWidget):
-
     def __init__(self):
         super().__init__()
         self.file_managing = FileOperations()
         self.first_point = None
         self.textEditor1 = QTextEdit()  # Defining data TextBox
         self.textEditor2 = QTextEdit()  # Defining results TextBox
-        self.menubar = QMenuBar()   # Defining toolbarmenu object
+        self.menubar = QMenuBar()  # Defining toolbarmenu object
         self.buttons_on_schemat = []
-        self.graphWidget = None # REMOVE IT!!
-        self.plot_itself = None # REMOVE IT!!
+        self.graphWidget = None  # REMOVE IT!!
+        self.plot_itself = None  # REMOVE IT!!
 
         self.stripMenu()  # Creating Strip Menu
         self.doLayout()  # Creating Layout
@@ -77,10 +89,10 @@ class SiMts(QWidget):
         self.schemat_tab = QWidget()
         self.schemat_tab.layout = QHBoxLayout()
 
-
         self.schemat_widget = Drawer()
         self.schemat_widget.setLayout(QHBoxLayout())
-        self.schemat_widget.setStyleSheet("background-color: white;")#323232;")
+        self.schemat_widget.setStyleSheet("background-color: white;")
+        # 323232;")
 
         self.pistons_widget_scroll = QScrollArea()
         self.pistons_widget = GroupedPistons()
@@ -94,7 +106,7 @@ class SiMts(QWidget):
         self.schemat_tab.setLayout(self.schemat_tab.layout)
 
         # Creating Data_Tab
-        self.data_tab = QWidget()
+        self.data_tab = RuleChecker()
         self.data_tab.layout = QHBoxLayout(self)
 
         tab1_insidelayout = QVBoxLayout(self)
@@ -121,33 +133,33 @@ class SiMts(QWidget):
     def return_value(self):
         self.pistons_widget.wynik.values = self.schemat_widget.return_values()
 
-
     def stripMenu(self):
-        """  Creating strip menu """
-        s_menu1 = self.menubar.addMenu("Plik")        # Adding toolbar option1
-        s_menu2 = self.menubar.addMenu("Eksportuj")   # Adding toolbar option2
-        new_act1 = QAction("Otwórz", self)            # Creating first option
-        new_act2 = QAction("Zapisz", self)            # Creating second option
-        new_act3 = QAction("Zamknij", self)           # Creating third option
+        """Creating strip menu"""
+        s_menu1 = self.menubar.addMenu("Plik")  # Adding toolbar option1
+        s_menu2 = self.menubar.addMenu("Eksportuj")  # Adding toolbar option2
+        new_act1 = QAction("Otwórz", self)  # Creating first option
+        new_act2 = QAction("Zapisz", self)  # Creating second option
+        new_act3 = QAction("Zamknij", self)  # Creating third option
 
         s_menu1.addAction(new_act1)
         new_act1.triggered.connect(
-            lambda x=self.textEditor1, y=self.graphWidget, z=self.plot_itself:
-            self.file_managing.get_file(textEditor=x, graphWidget=y, plot_itself=z)
+            lambda x=self.textEditor1, y=self.graphWidget, z=self.plot_itself: self.file_managing.get_file(
+                textEditor=x, graphWidget=y, plot_itself=z
+            )
         )
         new_act1.setShortcut("Ctrl+O")
 
         s_menu1.addAction(new_act2)
         new_act2.triggered.connect(
-            lambda x=self.textEditor1, y=self:
-            self.file_managing.save_file(textEditor=x, widget=y)
+            lambda x=self.textEditor1, y=self: self.file_managing.save_file(
+                textEditor=x, widget=y
+            )
         )
         new_act2.setShortcut("Ctrl+S")
 
         s_menu1.addAction(new_act3)
         new_act3.triggered.connect(
-            lambda x=app, y=self:
-            self.file_managing.exit_file(app=x, widget=y)
+            lambda x=app, y=self: self.file_managing.exit_file(app=x, widget=y)
         )
         new_act3.setShortcut("Ctrl+E")
 

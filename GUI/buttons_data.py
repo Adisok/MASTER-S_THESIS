@@ -1,14 +1,17 @@
-data = [{
+data = [
+    {
         "title": " First Group",
-        "buttons": [{
+        "buttons": [
+            {
                 "text": "0",
                 "path_icon": "GUI/images/piston1",
             },
-        ]
+        ],
     },
     {
         "title": "Second Group",
-        "buttons": [{
+        "buttons": [
+            {
                 "text": "0",
                 "path_icon": "GUI/images/monovalve",
             },
@@ -16,6 +19,6 @@ data = [{
                 "text": "1",
                 "path_icon": "GUI/images/bivalve",
             },
-        ]
-    }
+        ],
+    },
 ]

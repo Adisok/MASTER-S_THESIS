@@ -7,7 +7,15 @@ class Button(QPushButton):
     moved = pyqtSignal()
     connectionRequested = pyqtSignal(QPushButton)
 
-    def __init__(self, title, second_title=None, group=None, image_path=None, parent=None, width=100):
+    def __init__(
+        self,
+        title,
+        second_title=None,
+        group=None,
+        image_path=None,
+        parent=None,
+        width=100,
+    ):
         super().__init__(title, parent)
         self.second_title = second_title
         self.title = title
@@ -30,7 +38,9 @@ class Button(QPushButton):
                 self.right_index = self.left_index + 1
 
         if image_path is not None:
-            self.setStyleSheet(f"background-image : url({image_path});border :3px solid white")
+            self.setStyleSheet(
+                f"background-image : url({image_path});border :3px solid white"
+            )
         if self.second_title is not None:
             self.setContextMenuPolicy(Qt.CustomContextMenu)
             self.customContextMenuRequested.connect(self.showMenu)
@@ -45,8 +55,8 @@ class Button(QPushButton):
 
             byteArray = QByteArray()
             stream = QDataStream(byteArray, QIODevice.WriteOnly)
-            stream.writeQString(f'{self.title}, {self.second_title}, {self.group_name}')
-            mimeData.setData('myApp/QtWidget', byteArray)
+            stream.writeQString(f"{self.title}, {self.second_title}, {self.group_name}")
+            mimeData.setData("myApp/QtWidget", byteArray)
 
             drag.exec_(Qt.MoveAction)
 
@@ -61,13 +71,14 @@ class Button(QPushButton):
     def change_state(self, wchich_one=None):
         if "piston" in self.image_path:
             if wchich_one == "left":
-                self.left_state = int(not(self.left_state))
+                self.left_state = int(not (self.left_state))
             elif wchich_one == "right":
-                self.right_state = int(not(self.right_state))
+                self.right_state = int(not (self.right_state))
         elif "mono" in self.image_path or "bi" in self.image_path:
-            self.state = int(not(self.state))
+            self.state = int(not (self.state))
 
     def change_picture(self):
-        self.setStyleSheet(f"background-image : url(GUI/images/piston{self.left_state}); border :3px solid white")
+        self.setStyleSheet(
+            f"background-image : url(GUI/images/piston{self.left_state}); border :3px solid white"
+        )
         self.change_state()
-

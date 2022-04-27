@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QRectF, QLineF
-from PyQt5.QtWidgets import  QGraphicsScene, QGraphicsView, QMenu, QGraphicsLineItem
-from PyQt5.QtGui import  QPainterPathStroker
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QMenu, QGraphicsLineItem
+from PyQt5.QtGui import QPainterPathStroker
 
 from GUI.custom_buttons import Button
 from math_maker import ProcessAlgorithmMaker
@@ -36,7 +36,6 @@ class GraphicsLineItem(QGraphicsLineItem):
 
 
 class Drawer(QGraphicsView):
-
     def __init__(self, parent=None):
         super(Drawer, self).__init__(parent)
         self.setScene(QGraphicsScene(self))
@@ -58,10 +57,24 @@ class Drawer(QGraphicsView):
 
     def add_button(self, button_to_add, position, image_path):
         if "valve" in image_path:
-            self.buttons.append(Button(title=str(button_to_add), second_title=self.valves_count, image_path=image_path,parent=self))
+            self.buttons.append(
+                Button(
+                    title=str(button_to_add),
+                    second_title=self.valves_count,
+                    image_path=image_path,
+                    parent=self,
+                )
+            )
             self.valves_count += 1
         if "piston" in image_path:
-            self.buttons.append(Button(title=str(button_to_add), second_title=self.pistons_count, image_path=image_path,parent=self))
+            self.buttons.append(
+                Button(
+                    title=str(button_to_add),
+                    second_title=self.pistons_count,
+                    image_path=image_path,
+                    parent=self,
+                )
+            )
             self.pistons_count += 1
 
         self.buttons[-1].move(position)
@@ -78,7 +91,7 @@ class Drawer(QGraphicsView):
         btn = e.source()
         position = e.pos()
         if btn not in self.buttons:
-            self.add_button(btn.title, position=position, image_path=btn.image_path )
+            self.add_button(btn.title, position=position, image_path=btn.image_path)
         else:
             btn.move(position)
         e.setDropAction(Qt.MoveAction)
