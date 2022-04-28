@@ -47,12 +47,14 @@ class Drawer(QGraphicsView):
         self.pistons_count = 0
 
     def return_values(self):
+        """
+        Zwraca algorytm sterowania krok po kroku
+        :return:
+        """
         self.proces_algorithm_maker = ProcessAlgorithmMaker(self.buttons)
-        crocs = self.proces_algorithm_maker.make_algorithm()
-        flow = []
-        for i, j in crocs.items():
-            print(i, j)
-            flow.append(j)
+        algorithm = self.proces_algorithm_maker.make_algorithm()
+        flow = [algorithm_part for algorithm_part in algorithm]
+        print(flow)
         return flow
 
     def add_button(self, button_to_add, position, image_path):

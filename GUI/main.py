@@ -19,6 +19,7 @@ from PyQt5.QtWidgets import (
 
 
 # Define title of app
+from GUI.tabs import TabWidget
 from math_maker import RuleChecker
 
 TITLE = "PneuSim"
@@ -82,14 +83,23 @@ class SiMts(QWidget):
         self.schemat_tab.layout.addWidget(self.schemat_widget, 4)
         self.schemat_tab.setLayout(self.schemat_tab.layout)
 
+        # Creating tab
+        self.tabs = TabWidget()
+        self.tabs.update_algorytm.connect(self.update_algorytm_tab)
+
         # Creating MAIN Vertical layout
         vbox = QVBoxLayout()
         vbox.addWidget(self.menubar)
-        vbox.addWidget(self.schemat_tab)
+        vbox.addWidget(self.tabs)
         self.setLayout(vbox)
 
     def return_value(self):
         self.pistons_widget.wynik.values = self.schemat_widget.return_values()
+
+    def update_algorytm_tab(self):
+        print("ELO", self.schemat_widget.return_values())
+        self.tabs.algorythm_tab.setText(" ".join(self.schemat_widget.return_values()))
+
 
     def stripMenu(self):
         """Creating strip menu"""

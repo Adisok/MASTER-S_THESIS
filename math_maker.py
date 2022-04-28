@@ -14,16 +14,17 @@ class RuleChecker(QPushButton):
     def mousePressEvent(self, e):
         self.get_values.emit()
         print("values", self.values)
-        self.check_for_rules(values=self.values)
+        self.check_for_rules(steps=self.values)
 
-    def check_for_rules(self, values):
+    def check_for_rules(self, steps):
         rozwiazanie = []
-        for steps in values:
+        for step in steps:
+            step_keys = list(step.keys())
             for i in range(1, 21):
-                if Rules[i](steps["Y"], steps["fp"], steps["fk"]):
+                if Rules[i](step[step_keys[0]], step[step_keys[1]], step[step_keys[2]]):
                     rozwiazanie.append(Rules[i].__name__)
                     break
-        self.setText(f"{values}\n{rozwiazanie}")
+        self.setText(f"{steps}\n{rozwiazanie}")
 
 
 class ProcessAlgorithmMaker:
@@ -44,7 +45,6 @@ class ProcessAlgorithmMaker:
         for i in range(len(pistons)):
             self.pairs.append((pistons[i], valves[i]))
 
-        crocs = {}
         # check for pair, bo musze wiedzic ktore
         # warunki fpi i fki z pistona
         # dla ktorego valve
@@ -98,12 +98,10 @@ class ProcessAlgorithmMaker:
             current_group += 1
         print("algorithm_finall")
         for i in algorithm:
-            print(i)
-        print("bi", bi_valves)
+            print(i, "i")
         if len(bi_valves):
-            print("ZMIENIAM ZAWOR BI STABILNY")
             self.update_algorithm_with_bi_stable_valve(algorithm, bi_valves)
-        return crocs
+        return algorithm
 
     def process_group(self, algorithm, current_group):
         group_to_be_processed = algorithm[current_group]
