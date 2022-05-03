@@ -28,7 +28,7 @@ class RuleChecker(QPushButton):
 
 
 class ProcessAlgorithmMaker:
-    def __init__(self, buttons):
+    def __init__(self, buttons=None):
         self.buttons = buttons
 
     def make_algorithm(self):

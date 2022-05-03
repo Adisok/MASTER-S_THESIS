@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QGraphicsScene, QGraphicsView, QMenu, QGraphicsLineI
 from PyQt5.QtGui import QPainterPathStroker
 
 from GUI.custom_buttons import Button
-from math_maker import ProcessAlgorithmMaker
 
 
 class GraphicsLineItem(QGraphicsLineItem):
@@ -46,15 +45,16 @@ class Drawer(QGraphicsView):
         self.valves_count = 0
         self.pistons_count = 0
 
-    def return_values(self):
+    def return_values(self, process_algorithm_maker):
         """
         Zwraca algorytm sterowania krok po kroku
         :return:
         """
-        self.proces_algorithm_maker = ProcessAlgorithmMaker(self.buttons)
-        algorithm = self.proces_algorithm_maker.make_algorithm()
+        print("ELO2")
+        algorithm = process_algorithm_maker.make_algorithm()
         flow = [algorithm_part for algorithm_part in algorithm]
-        print(flow)
+        print("buttons", self.buttons)
+        print("flow", flow)
         return flow
 
     def add_button(self, button_to_add, position, image_path):

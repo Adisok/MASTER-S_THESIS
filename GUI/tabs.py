@@ -6,13 +6,15 @@ from GUI.grouped_pistons import GroupedPistons
 
 ALGORYTHM_TAM_INDEX = 1
 
+
 class TabWidget(QDialog):
     update_algorytm = pyqtSignal(QTabWidget)
 
-    def __init__(self):
+    def __init__(self, process_algorithm_maker):
         super().__init__()
         self.setWindowTitle('Tab Widget Application')
 
+        self.process_algorithm_maker = process_algorithm_maker
         # if the target widget of the layout is provided as an init argument, the
         # layout will be automatically set to it
         vbox = QVBoxLayout(self)
@@ -31,7 +33,6 @@ class TabWidget(QDialog):
 
         self.pistons_widget_scroll = QScrollArea()
         self.pistons_widget = GroupedPistons()
-        self.pistons_widget.wynik.get_values.connect(self.return_value)
 
         self.pistons_widget_scroll.setWidget(self.pistons_widget)
         self.pistons_widget_scroll.setWidgetResizable(True)
@@ -48,8 +49,3 @@ class TabWidget(QDialog):
         tabwidget.addTab(self.algorythm_tab, "Algorytm")
 
         tabwidget.tabBarClicked.connect(lambda: self.update_algorytm.emit(self))
-
-    def return_value(self):
-        self.pistons_widget.wynik.values = self.schemat_widget.return_values()
-
-
