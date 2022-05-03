@@ -50,11 +50,8 @@ class Drawer(QGraphicsView):
         Zwraca algorytm sterowania krok po kroku
         :return:
         """
-        print("ELO2")
         algorithm = process_algorithm_maker.make_algorithm()
         flow = [algorithm_part for algorithm_part in algorithm]
-        print("buttons", self.buttons)
-        print("flow", flow)
         return flow
 
     def add_button(self, button_to_add, position, image_path):

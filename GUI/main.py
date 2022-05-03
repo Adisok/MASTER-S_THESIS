@@ -1,17 +1,13 @@
 import json
 import sys
 
-from GUI.drawer import Drawer
 from GUI.file_operations import FileOperations
-from GUI.grouped_pistons import GroupedPistons
 from PyQt5.QtWidgets import (
     QApplication,
     QAction,
     QWidget,
     QTextEdit,
     QMenuBar,
-    QHBoxLayout,
-    QScrollArea,
     QVBoxLayout,
 )
 
@@ -76,14 +72,15 @@ class SiMts(QWidget):
         self.setLayout(vbox)
 
     def return_value(self):
-        print("ELO")
         self.process_algorithm_maker.buttons = self.tabs.schemat_widget.buttons
         self.tabs.pistons_widget.wynik.values = self.tabs.schemat_widget.return_values(
             process_algorithm_maker=self.process_algorithm_maker
         )
 
     def update_algorytm_tab(self):
-        result = self.tabs.schemat_widget.return_values(process_algorithm_maker=self.process_algorithm_maker)
+        result = self.tabs.schemat_widget.return_values(
+            process_algorithm_maker=self.process_algorithm_maker
+        )
         self.tabs.algorythm_tab.setText(" ".join(json.dumps(result)))
 
     def stripMenu(self):

@@ -1,5 +1,13 @@
 from PyQt5.QtCore import pyqtSignal
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTabWidget, QWidget, QHBoxLayout, QScrollArea, QTextEdit
+from PyQt5.QtWidgets import (
+    QDialog,
+    QVBoxLayout,
+    QTabWidget,
+    QWidget,
+    QHBoxLayout,
+    QScrollArea,
+    QTextEdit,
+)
 
 from GUI.drawer import Drawer
 from GUI.grouped_pistons import GroupedPistons
@@ -12,7 +20,7 @@ class TabWidget(QDialog):
 
     def __init__(self, process_algorithm_maker):
         super().__init__()
-        self.setWindowTitle('Tab Widget Application')
+        self.setWindowTitle("Tab Widget Application")
 
         self.process_algorithm_maker = process_algorithm_maker
         # if the target widget of the layout is provided as an init argument, the

@@ -13,7 +13,6 @@ class RuleChecker(QPushButton):
 
     def mousePressEvent(self, e):
         self.get_values.emit()
-        print("values", self.values)
         self.check_for_rules(steps=self.values)
 
     def check_for_rules(self, steps):
@@ -78,12 +77,10 @@ class ProcessAlgorithmMaker:
                 bi_valves.append(f"Y{valve.second_title}")
             algorithm.append(temp_table)
 
-        print(algorithm)
         current_group = 0
         for i in range(len(algorithm)):
             self.process_group(algorithm, current_group)
             for j in range(current_group + 1, len(algorithm)):
-                print(algorithm[j])
                 for k in range(len(algorithm[j])):
                     algorithm[j][f"Y{j}"].append(self.pairs[j][1].state)
                     algorithm[j][f"X{j * 2 + 1}"].append(self.pairs[j][0].left_state)
@@ -96,11 +93,9 @@ class ProcessAlgorithmMaker:
                     algorithm[l][f"X{l * 2 + 2}"].append(self.pairs[l][0].right_state)
 
             current_group += 1
-        print("algorithm_finall")
         for i in algorithm:
-            print(i, "i")
-        if len(bi_valves):
-            self.update_algorithm_with_bi_stable_valve(algorithm, bi_valves)
+            if len(bi_valves):
+                self.update_algorithm_with_bi_stable_valve(algorithm, bi_valves)
         return algorithm
 
     def process_group(self, algorithm, current_group):
@@ -183,7 +178,6 @@ class ProcessAlgorithmMaker:
             y_key = keys_list[0]
             bi_valve_group = int(y_key[1]) + 1
             if y_key in bi_valves:
-                print(i, int(y_key[1]))
                 first_x_key = keys_list[1]
                 second_x_key = keys_list[2]
                 fill_values = [0] * (len(i[y_key]) - 4 * bi_valve_group)
@@ -227,11 +221,6 @@ class ProcessAlgorithmMaker:
                 1,
                 1,
             ]
-
-        print("bi_alg")
-        for i in algorithm:
-            print(i)
-
 
 # ALGORYTM!?
 # WIEKSZA SWOBODA W ALGORYTMIE

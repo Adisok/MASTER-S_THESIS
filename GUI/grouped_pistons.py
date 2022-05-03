@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGroupBox
 from buttons_data import data as buttons_data
 from GUI.custom_buttons import Button
 from math_maker import RuleChecker
