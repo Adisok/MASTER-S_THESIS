@@ -45,12 +45,13 @@ class Drawer(QGraphicsView):
         self.valves_count = 0
         self.pistons_count = 0
 
-    def return_values(self, process_algorithm_maker):
+
+    def return_values(self, process_algorithm_maker, buttons):
         """
         Zwraca algorytm sterowania krok po kroku
         :return:
         """
-        algorithm = process_algorithm_maker.make_algorithm()
+        algorithm = process_algorithm_maker.make_algorithm(buttons)
         flow = [algorithm_part for algorithm_part in algorithm]
         return flow
 
@@ -65,6 +66,8 @@ class Drawer(QGraphicsView):
                 )
             )
             self.valves_count += 1
+            self.buttons[-1].title = str(self.valves_count)
+
         if "piston" in image_path:
             self.buttons.append(
                 Button(
@@ -75,6 +78,7 @@ class Drawer(QGraphicsView):
                 )
             )
             self.pistons_count += 1
+            self.buttons[-1].title = str(self.pistons_count)
 
         self.buttons[-1].move(position)
         self.buttons[-1].connectionRequested.connect(self.connectButton)

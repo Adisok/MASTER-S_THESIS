@@ -18,11 +18,10 @@ ALGORYTHM_TAM_INDEX = 1
 class TabWidget(QDialog):
     update_algorytm = pyqtSignal(QTabWidget)
 
-    def __init__(self, process_algorithm_maker):
+    def __init__(self):
         super().__init__()
         self.setWindowTitle("Tab Widget Application")
 
-        self.process_algorithm_maker = process_algorithm_maker
         # if the target widget of the layout is provided as an init argument, the
         # layout will be automatically set to it
         vbox = QVBoxLayout(self)

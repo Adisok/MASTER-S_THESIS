@@ -27,14 +27,11 @@ class RuleChecker(QPushButton):
 
 
 class ProcessAlgorithmMaker:
-    def __init__(self, buttons=None):
-        self.buttons = buttons
-
-    def make_algorithm(self):
+    def make_algorithm(self, buttons):
         pistons = []
         valves = []
 
-        for i in self.buttons:
+        for i in buttons:
             if "piston" in i.image_path:
                 pistons.append(i)
             if "valve" in i.image_path:
@@ -96,6 +93,12 @@ class ProcessAlgorithmMaker:
         for i in algorithm:
             if len(bi_valves):
                 self.update_algorithm_with_bi_stable_valve(algorithm, bi_valves)
+
+        for button in buttons:
+            if "valve" in button.image_path:
+                button.state = int(not button.state)
+                break
+
         return algorithm
 
     def process_group(self, algorithm, current_group):

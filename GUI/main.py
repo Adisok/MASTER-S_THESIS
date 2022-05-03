@@ -1,5 +1,6 @@
 import json
 import sys
+from copy import copy
 
 from GUI.file_operations import FileOperations
 from PyQt5.QtWidgets import (
@@ -61,8 +62,8 @@ class SiMts(QWidget):
         self.process_algorithm_maker = ProcessAlgorithmMaker()
 
         # Creating tab
-        self.tabs = TabWidget(self.process_algorithm_maker)
-        self.tabs.update_algorytm.connect(self.update_algorytm_tab)
+        self.tabs = TabWidget()
+        self.tabs.update_algorytm.connect(self.update_algorithm_tab)
         self.tabs.pistons_widget.wynik.get_values.connect(self.return_value)
 
         # Creating MAIN Vertical layout
@@ -72,16 +73,22 @@ class SiMts(QWidget):
         self.setLayout(vbox)
 
     def return_value(self):
-        self.process_algorithm_maker.buttons = self.tabs.schemat_widget.buttons
+        buttons=copy(self.tabs.schemat_widget.buttons)
         self.tabs.pistons_widget.wynik.values = self.tabs.schemat_widget.return_values(
-            process_algorithm_maker=self.process_algorithm_maker
+            process_algorithm_maker=self.process_algorithm_maker, buttons=buttons
         )
 
-    def update_algorytm_tab(self):
-        result = self.tabs.schemat_widget.return_values(
-            process_algorithm_maker=self.process_algorithm_maker
-        )
-        self.tabs.algorythm_tab.setText(" ".join(json.dumps(result)))
+    def update_algorithm_tab(self):
+        try:
+            buttons = copy(self.tabs.schemat_widget.buttons)
+            results = self.tabs.schemat_widget.return_values(
+                process_algorithm_maker=self.process_algorithm_maker, buttons=buttons
+            )
+        except TypeError:
+            self.return_value()
+            results = self.tabs.pistons_widget.wynik.values
+        result_lists = [" ".join(json.dumps(result)) for result in results]
+        self.tabs.algorythm_tab.setText("\n".join(result_lists))
 
     def stripMenu(self):
         """Creating strip menu"""
