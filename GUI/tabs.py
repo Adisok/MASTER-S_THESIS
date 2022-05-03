@@ -12,11 +12,12 @@ from PyQt5.QtWidgets import (
 from GUI.drawer import Drawer
 from GUI.grouped_pistons import GroupedPistons
 
-ALGORYTHM_TAM_INDEX = 1
+SCHEMAT_TAB_INDEX = 0
+ALGORITHM_TAB_INDEX = 1
 
 
 class TabWidget(QDialog):
-    update_algorytm = pyqtSignal(QTabWidget)
+    update_algorithm = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -55,4 +56,8 @@ class TabWidget(QDialog):
         tabwidget.addTab(self.schemat_tab, "Schemat")
         tabwidget.addTab(self.algorythm_tab, "Algorytm")
 
-        tabwidget.tabBarClicked.connect(lambda: self.update_algorytm.emit(self))
+        tabwidget.tabBarClicked.connect(self.send_update_tab_signal)
+
+    def send_update_tab_signal(self, index):
+        if index == ALGORITHM_TAB_INDEX:
+            self.update_algorithm.emit()

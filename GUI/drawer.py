@@ -45,7 +45,6 @@ class Drawer(QGraphicsView):
         self.valves_count = 0
         self.pistons_count = 0
 
-
     def return_values(self, process_algorithm_maker, buttons):
         """
         Zwraca algorytm sterowania krok po kroku
