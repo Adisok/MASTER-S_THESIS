@@ -74,14 +74,19 @@ class SiMts(QWidget):
         self.setLayout(vbox)
 
     def return_value(self):
+        if not self.algorithm:
+            self.algorithm = self.tabs.schemat_widget.return_values(
+                process_algorithm_maker=self.process_algorithm_maker,
+                buttons=self.tabs.schemat_widget.buttons,
+            )
         self.tabs.pistons_widget.wynik.values = self.algorithm
 
     def update_algorithm_tab(self):
         text = self.tabs.algorythm_tab.toPlainText().replace(" ", "")
-        current_algorithm = ast.literal_eval(text) if text else None
-        list_algo = [current_algorithm]
-        if not (None in list_algo):
-            self.algorithm = list_algo
+        text_list = text.split("\n")
+        current_algorithm = [ast.literal_eval(text) for text in text_list if text]
+        if not ([] == current_algorithm):
+            self.algorithm = current_algorithm
             return
         try:
             self.algorithm = self.tabs.schemat_widget.return_values(
